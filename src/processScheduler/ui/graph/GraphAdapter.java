@@ -17,7 +17,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import processScheduler.logic.io.network.RouterModel;
+import processScheduler.logic.RouterModel;
 import processScheduler.model.Channel;
 import processScheduler.model.Graph;
 import processScheduler.model.GraphEvent;
@@ -165,7 +165,7 @@ public class GraphAdapter {
         router.show();
     }
     public void onVertexAdded(Vertex v) {
-        VertexView view = new TextCircleVertexView(v.getId());
+        VertexView view = new TextCircleVertexView(v.getId(), v.statusProperty());
         allVertexes.put(v, view);
         vertexLayer.getChildren().add(view);
         if(addedFromContext){
@@ -183,7 +183,7 @@ public class GraphAdapter {
     }
 
     public void onEdgeAdded(Channel e) {
-        EdgeView view = new EdgeView(allVertexes.get(e.getSource()), allVertexes.get(e.getTarget()), e.getWeight());
+        EdgeView view = new EdgeView(allVertexes.get(e.getSource()), allVertexes.get(e.getTarget()), e.getWeight(), e.workloadProperty());
         allEdges.put(e, view);
         vertexLayer.getChildren().add(0,view);
     }

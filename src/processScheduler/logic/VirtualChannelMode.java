@@ -1,4 +1,4 @@
-package processScheduler.logic.io.network;
+package processScheduler.logic;
 
 import processScheduler.model.*;
 
@@ -7,13 +7,10 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 
-/**
- * Created by Milena on 04.12.2015.
- */
 public class VirtualChannelMode extends AbstractMode {
 
-    public VirtualChannelMode(Random random, TreeMap<Vertex, RouterModel> nodes, Graph graph) {
-        super(random, nodes, graph);
+    public VirtualChannelMode(TreeMap<Vertex, RouterModel> nodes, Graph graph, AbstractBuilder builder) {
+        super(nodes, graph, builder);
         this.system_time = 0;
     }
 
@@ -27,8 +24,9 @@ public class VirtualChannelMode extends AbstractMode {
             message.getSource().setRouteTo(nodes.get(message.getSource()).getTable().getRouting().get(pkg.getGlobalTarget()));
             sendPackage(message.getSource(), pkg);
             message.getSource().getMessages().add(message);
-        }
-        else{
+            message.getSource().setStatus(1);
+            message.getTarget().setStatus(2);
+        } else {
             System.out.println(String.format("Vertex %d rejected sending message", message.getSource().getId()));
         }
     }
@@ -36,7 +34,7 @@ public class VirtualChannelMode extends AbstractMode {
     public void sendPackage(Vertex source, Package pkg) {
         Message message = pkg.getMsg();
         Vertex nextnode;
-        if (pkg instanceof SysPackage && (((SysPackage) pkg).mode == SysPackage.Mode.DECONFIGURE||((SysPackage) pkg).mode == SysPackage.Mode.ACCEPT))
+        if (pkg instanceof SysPackage && (((SysPackage) pkg).mode == SysPackage.Mode.DECONFIGURE || ((SysPackage) pkg).mode == SysPackage.Mode.ACCEPT))
             nextnode = source.getRouteFrom();
         else
             nextnode = source.getRouteTo();
@@ -89,6 +87,7 @@ public class VirtualChannelMode extends AbstractMode {
                     if (!v.equals(sysPkg.getGlobalTarget())) {
                         v.setRouteTo(nodes.get(v).getTable().getRouting().get(sysPkg.getGlobalTarget()));
                         sendPackage(v, sysPkg);
+                        v.setStatus(3);
                     } else {
                         processing_package.setWaiting_time(system_time - processing_package.getStart_processing_time());
                         System.out.println(String.format("Virtual channel for message %d is configured", message.getMessage_number()));
@@ -96,25 +95,25 @@ public class VirtualChannelMode extends AbstractMode {
                     }
                     v.getQueue().remove(processing_package);
                 } else {
+                    System.out.println(String.format("Vertex %d is already configured in channel", v.getId()));
                     v.getQueue().remove(processing_package);
                     v.getQueue().add(sysPkg);
                 }
             } else if (sysPkg.mode == SysPackage.Mode.DECONFIGURE) {
                 if (!v.equals(sysPkg.getGlobalTarget())) {
                     sendPackage(v, sysPkg);
-                }
-                else {
+                } else {
                     processing_package.setWaiting_time(system_time - processing_package.getStart_processing_time());
                 }
+                if (v.getStatus() == 1 || v.getStatus() == 3)
+                    v.setStatus(0);
                 v.getQueue().remove(processing_package);
                 v.setRouteFrom(null);
                 v.setRouteTo(null);
-            }
-            else if (sysPkg.mode == SysPackage.Mode.ACCEPT){
+            } else if (sysPkg.mode == SysPackage.Mode.ACCEPT) {
                 if (!v.equals(sysPkg.getGlobalTarget())) {
                     sendPackage(v, sysPkg);
-                }
-                else{
+                } else {
                     putPackages(v);
                     processing_package.setWaiting_time(system_time - processing_package.getStart_processing_time());
                 }
@@ -127,6 +126,9 @@ public class VirtualChannelMode extends AbstractMode {
                 if (message.getDeliveryMap().entrySet().stream().allMatch(Map.Entry<Package, Boolean>::getValue)) {
                     System.out.println("Message " + message.getMessage_number() + " was delivered to goal (" + v.getId() + ")");
                     sendPackage(v, new SysPackage(message.getSource(), v, 1, message, SysPackage.Mode.DECONFIGURE));
+                    v.setStatus(0);
+                    v.setRouteFrom(null);
+                    v.setRouteTo(null);
                 }
                 processing_package.setWaiting_time(system_time - processing_package.getStart_processing_time());
             } else {

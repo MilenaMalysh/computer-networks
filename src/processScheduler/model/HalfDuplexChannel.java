@@ -2,7 +2,7 @@ package processScheduler.model;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import processScheduler.logic.io.network.Package;
+import processScheduler.logic.Package;
 /**
  * Created by Milena on 05.12.2015.
  */
@@ -19,6 +19,8 @@ public class HalfDuplexChannel extends Channel {
     public void addToQueue(Package p) {
         p.setCounter(getWeight()*p.getSize());
         packageQueue.add(p);
+        workloadProperty().setValue(!packageQueue.isEmpty());
+
     }
 
     @Override
@@ -38,15 +40,24 @@ public class HalfDuplexChannel extends Channel {
         return false;
     }
 
-    public Package getDelivered(){
-        if(!packageQueue.isEmpty()&&packageQueue.getFirst().isDelivered()){
-            return packageQueue.removeFirst();
+    public Package getDelivered() {
+        Package first = null;
+        if (!packageQueue.isEmpty() && packageQueue.getFirst().isDelivered()) {
+            first = packageQueue.removeFirst();
+            return first;
         }
-        return null;
+        workloadProperty().setValue(!packageQueue.isEmpty());
+        return first;
     }
 
     @Override
     public int getTraffic(Vertex dest) {
         return packageQueue.stream().mapToInt(Package::getCounter).sum();
+    }
+
+    @Override
+    public void cancel() {
+        packageQueue.clear();
+        workloadProperty().set(false);
     }
 }

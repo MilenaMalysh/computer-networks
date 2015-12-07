@@ -1,8 +1,11 @@
 package processScheduler.model;
 
 
-import processScheduler.logic.io.network.*;
-import processScheduler.logic.io.network.Package;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import processScheduler.logic.Message;
+import processScheduler.logic.RouterModel;
+import processScheduler.logic.Package;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -16,6 +19,7 @@ public class Vertex implements Comparable<Vertex> {
     private RouterModel router;
     private Deque<Package> queue;
     private Deque<Message> messages;
+    private IntegerProperty status;
     public TreeMap<Vertex, Channel> getNeighbours() {
         return neighbours;
     }
@@ -25,6 +29,7 @@ public class Vertex implements Comparable<Vertex> {
         neighbours = new TreeMap<>();
         this.queue = new ArrayDeque<>();
         this.messages = new ArrayDeque<>();
+        status = new SimpleIntegerProperty(0);
     }
 
     public void registerEdge(Channel e){
@@ -88,5 +93,17 @@ public class Vertex implements Comparable<Vertex> {
 
     public void setMessages(Deque<Message> messages) {
         this.messages = messages;
+    }
+
+    public void setStatus(int status) {
+        this.status.set(status);
+    }
+
+    public int getStatus() {
+        return status.get();
+    }
+
+    public IntegerProperty statusProperty() {
+        return status;
     }
 }

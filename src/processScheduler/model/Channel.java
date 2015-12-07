@@ -1,13 +1,16 @@
 package processScheduler.model;
 
-import processScheduler.logic.io.Serializer;
-import processScheduler.logic.io.network.Package;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import processScheduler.io.Serializer;
+import processScheduler.logic.Package;
 
 public abstract class Channel implements Comparable<Channel> {
     private int id;
     private int weight;
     private Vertex source;
     private Vertex target;
+    private BooleanProperty workload;
 
     public Channel(Vertex source, Vertex target, int weight){
         this.id = Serializer.pairingFunction(source.getId(), target.getId());
@@ -16,6 +19,7 @@ public abstract class Channel implements Comparable<Channel> {
         source.registerEdge(this);
         target.registerEdge(this);
         this.weight = weight;
+        workload = new SimpleBooleanProperty(false);
 
     }
 
@@ -59,4 +63,15 @@ public abstract class Channel implements Comparable<Channel> {
     public abstract boolean update();
 
     public abstract int getTraffic(Vertex dest);
+
+    public boolean getWorkload() {
+        return workload.get();
+    }
+
+    public BooleanProperty workloadProperty() {
+        return workload;
+    }
+
+    public abstract void cancel();
+
 }

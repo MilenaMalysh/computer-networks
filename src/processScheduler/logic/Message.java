@@ -1,4 +1,4 @@
-package processScheduler.logic.io.network;
+package processScheduler.logic;
 
 import processScheduler.model.Vertex;
 

@@ -1,27 +1,20 @@
 package processScheduler.ui.Blocks;
 
-import com.google.common.eventbus.EventBus;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.control.Label;
 import javafx.scene.text.Font;
-import javafx.scene.text.*;
-import processScheduler.logic.io.network.Strategy;
+import processScheduler.logic.Strategy;
 import processScheduler.model.Graph;
 import processScheduler.model.Vertex;
-
-import java.awt.*;
 
 
 /**
@@ -97,7 +90,10 @@ public class FromOneToAnother extends BorderPane {
         btn1.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                PlayEvent ev =new PlayEvent(TestNet.getRb1().isSelected() ? PlayEvent.DATAGRAM : PlayEvent.VIRTUAL);
+                PlayEvent ev =new PlayEvent(graph.findVertex(list1.getSelectionModel().getSelectedItem()),
+                        graph.findVertex(list2.getSelectionModel().getSelectedItem()),
+                        Integer.parseInt(field.getText()),
+                        TestNet.getRb1().isSelected() ? PlayEvent.DATAGRAM : PlayEvent.VIRTUAL);
 /*                eventBus.post(new Event(
                         list1.getSelectionModel().selectedItemProperty().get(),
                         list2.getSelectionModel().selectedItemProperty().get(),
@@ -164,22 +160,17 @@ public class FromOneToAnother extends BorderPane {
     }
 
 
-    public static class Event{
-        public Vertex from;
-        public Vertex to;
-        public int msgSize;
-        public Event(Vertex from, Vertex to, int msgSize){
-            this.from = from;
-            this.to = to;
-            this.msgSize = msgSize;
-        }
-    }
-
     public static class PlayEvent{
         public static final int DATAGRAM = 0;
         public static final int VIRTUAL = 1;
-        public static int mode;
-        public  PlayEvent(int mode){
+        public Vertex from;
+        public Vertex to;
+        public int msgSize;
+        public int mode;
+        public PlayEvent(Vertex from, Vertex to, int msgSize, int mode){
+            this.from = from;
+            this.to = to;
+            this.msgSize = msgSize;
             this.mode = mode;
         }
     }

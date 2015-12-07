@@ -1,8 +1,12 @@
 package processScheduler.ui.graph;
 
-import javafx.beans.binding.DoubleBinding;
+import javafx.beans.binding.*;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -16,7 +20,7 @@ public class EdgeView extends Group {
     private int weight;
     Line line;
 
-    public EdgeView(VertexView source, VertexView target, int weight) {
+    public EdgeView(VertexView source, VertexView target, int weight, BooleanProperty workload) {
 
         this.source = source;
         this.target = target;
@@ -32,6 +36,16 @@ public class EdgeView extends Group {
         DoubleBinding targetY = target.layoutYProperty().add(target.getBoundsInParent().getHeight() / 2.0);
         line.endYProperty().bind(targetY);
         line.setStroke(Color.web("#BBBBBB"));
+        line.strokeProperty().bind(new ObjectBinding<Paint>() {
+            {
+                super.bind(workload);
+            }
+
+            @Override
+            protected Paint computeValue() {
+                return workload.get() ? Color.VIOLET : Color.web("#BBBBBB");
+            }
+        });
         line.setStrokeWidth(2);
         Text text = new Text(Integer.toString(weight));
         text.setFont(FONT);

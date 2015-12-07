@@ -1,6 +1,5 @@
-package processScheduler.logic.io.network;
+package processScheduler.logic;
 
-import processScheduler.model.Channel;
 import processScheduler.model.Vertex;
 
 /**

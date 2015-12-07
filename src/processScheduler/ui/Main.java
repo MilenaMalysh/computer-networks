@@ -1,16 +1,13 @@
 package processScheduler.ui;
 
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
-import processScheduler.logic.io.network.Strategy;
+import processScheduler.logic.Strategy;
 import processScheduler.model.DuplexChannel;
 import processScheduler.model.Graph;
 import processScheduler.model.Vertex;
-import processScheduler.ui.Blocks.FromOneToAnother;
-import processScheduler.ui.Blocks.TestNet;
 import processScheduler.ui.graph.GraphAdapter;
 
 public class Main extends Application {

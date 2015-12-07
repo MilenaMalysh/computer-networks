@@ -1,8 +1,10 @@
 package processScheduler.model;
 
+import processScheduler.logic.Package;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
-import processScheduler.logic.io.network.Package;
+
 /**
  * Created by Milena on 05.12.2015.
  */
@@ -19,60 +21,74 @@ public class DuplexChannel extends Channel {
 
     @Override
     public void addToQueue(Package p) {
-        p.setCounter(getWeight()*p.getSize());
-        if(p.getSource().equals(getSource())){
+        p.setCounter(getWeight() * p.getSize());
+        if (p.getSource().equals(getSource())) {
             sourceTargetQueue.add(p);
-        }else{
+        } else {
             targetSourceQueue.add(p);
         }
+        workloadProperty().setValue(!(sourceTargetQueue.isEmpty()&&targetSourceQueue.isEmpty()));
     }
 
     @Override
     public int getQueueSize() {
-        return sourceTargetQueue.size()+targetSourceQueue.size();
+        return sourceTargetQueue.size() + targetSourceQueue.size();
     }
 
     @Override
     public boolean update() {
         boolean result = false;
-        if(!sourceTargetQueue.isEmpty()){
+        if (!sourceTargetQueue.isEmpty()) {
             Package sourceTargetHead = sourceTargetQueue.getFirst();
             sourceTargetHead.update(this.getWeight());
-            if(sourceTargetHead.isDelivered()){
+            if (sourceTargetHead.isDelivered()) {
                 result = true;
             }
         }
-        if(!targetSourceQueue.isEmpty()){
+        if (!targetSourceQueue.isEmpty()) {
             Package targetSourceHead = targetSourceQueue.getFirst();
             targetSourceHead.update(this.getWeight());
-            if(targetSourceHead.isDelivered()){
+            if (targetSourceHead.isDelivered()) {
                 result = true;
             }
         }
+        workloadProperty().setValue(!(sourceTargetQueue.isEmpty()&&targetSourceQueue.isEmpty()));
         return result;
     }
 
-    public Package getTargetDelivered(){
-        if(!sourceTargetQueue.isEmpty()&&sourceTargetQueue.getFirst().isDelivered()){
-            return sourceTargetQueue.removeFirst();
+    public Package getTargetDelivered() {
+        Package first = null;
+        if (!sourceTargetQueue.isEmpty() && sourceTargetQueue.getFirst().isDelivered()) {
+            first = sourceTargetQueue.removeFirst();
+            return first;
         }
-        return null;
+        workloadProperty().setValue(!(sourceTargetQueue.isEmpty()&&targetSourceQueue.isEmpty()));
+        return first;
     }
 
-    public Package getSourceDelivered(){
-        if(!targetSourceQueue.isEmpty()&&targetSourceQueue.getFirst().isDelivered()){
-            return targetSourceQueue.removeFirst();
+    public Package getSourceDelivered() {
+        Package first = null;
+        if (!targetSourceQueue.isEmpty() && targetSourceQueue.getFirst().isDelivered()) {
+            first = targetSourceQueue.removeFirst();
+            return first;
         }
-        return null;
+        workloadProperty().setValue(!(sourceTargetQueue.isEmpty()&&targetSourceQueue.isEmpty()));
+        return first;
     }
 
     @Override
     public int getTraffic(Vertex dest) {
-        if(dest.equals(getSource())){
+        if (dest.equals(getSource())) {
             return targetSourceQueue.stream().mapToInt(Package::getCounter).sum();
-        }
-        else {
+        } else {
             return sourceTargetQueue.stream().mapToInt(Package::getCounter).sum();
         }
+    }
+
+    @Override
+    public void cancel() {
+        sourceTargetQueue.clear();
+        targetSourceQueue.clear();
+        workloadProperty().set(false);
     }
 }

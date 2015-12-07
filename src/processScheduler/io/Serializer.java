@@ -1,4 +1,4 @@
-package processScheduler.logic.io;
+package processScheduler.io;
 
 
 import processScheduler.model.Graph;
