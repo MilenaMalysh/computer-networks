@@ -30,7 +30,7 @@ public class Graph implements Serializable {
         return vertexes.get(id);
     }
 
-    public Channel findEdge(Vertex source, Vertex target) {
+    public Channel findChannel(Vertex source, Vertex target) {
         return edges.get(source, target)==null?edges.get(target, source):edges.get(source, target);
     }
 

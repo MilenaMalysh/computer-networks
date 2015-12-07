@@ -1,11 +1,11 @@
 package processScheduler.logic;
 
-import processScheduler.model.Channel;
-import processScheduler.model.Graph;
-import processScheduler.model.Vertex;
+import com.google.common.eventbus.EventBus;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import processScheduler.model.*;
 
-import java.util.Collection;
-import java.util.Random;
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -15,32 +15,48 @@ public abstract class AbstractMode {
     protected TreeMap<Vertex, RouterModel> nodes;
     protected Graph graph;
     protected AbstractBuilder builder;
-    protected int amount_of_packages;
-    protected int amount_of_messages;
-    protected int amount_of_sys_package;
-    protected int summary_waiting_time;
-    protected int system_time;
+    protected IntegerProperty amount_of_packages;
+    protected IntegerProperty amount_of_messages;
+    protected IntegerProperty amount_of_sys_package;
+    protected EventBus deliveryBus;
 
-    public AbstractMode(TreeMap<Vertex, RouterModel> nodes, Graph graph, AbstractBuilder builder) {
-        this.nodes = nodes;
+    public AbstractMode(Graph graph, AbstractBuilder builder) {
         this.graph = graph;
-        this.amount_of_packages = 0;
-        this.amount_of_sys_package = 0;
-        this.summary_waiting_time = 0;
-        this.amount_of_messages = 0;
+        this.amount_of_messages = new SimpleIntegerProperty(0);
+        this.amount_of_packages = new SimpleIntegerProperty(0);
+        this.amount_of_sys_package = new SimpleIntegerProperty(0);
         this.builder = builder;
+        nodes = new TreeMap<>();
+        update_configuration();
     }
 
-    public void tick(){
+    public void tick() {
+        graph.getEdges().stream().forEach(e -> {
+            if (e.update()) {
+                if (e instanceof DuplexChannel) {
+                    deliverResult(((DuplexChannel) e).getSourceDelivered());
+                    deliverResult(((DuplexChannel) e).getTargetDelivered());
+                } else {
+                    deliverResult(((HalfDuplexChannel) e).getDelivered());
+                }
+            }
+        });
+
+        for (Map.Entry<Integer, Vertex> i : graph.getVertexes().entrySet()) {
+            if (!i.getValue().isQueueEmpty()) {
+                processDeliveredPackage(i.getValue());
+            }
+        }
     }
 
-    public Message generate_message(){
-       amount_of_messages++;
-        return builder.build(amount_of_messages);
+    public Message generate_message() {
+        amount_of_messages.setValue(amount_of_messages.get()+1);
+        Message message = builder.build(amount_of_messages.get());
+        return message;
     }
 
 
-    public abstract void sendMessage();
+    public abstract Message sendMessage();
 
     public AbstractBuilder getBuilder() {
         return builder;
@@ -50,8 +66,8 @@ public abstract class AbstractMode {
         this.builder = builder;
     }
 
-    public void cancel(){
-        graph.getVertexeses().forEach(v->{
+    public void cancel() {
+        graph.getVertexeses().forEach(v -> {
             v.setRouteFrom(null);
             v.setRouteTo(null);
             v.getMessages().clear();
@@ -59,5 +75,26 @@ public abstract class AbstractMode {
             v.setStatus(0);
         });
         graph.getEdges().forEach(Channel::cancel);
+    }
+
+    public void update_configuration() {
+        nodes.clear();
+        for (Map.Entry<Integer, Vertex> i : graph.getVertexes().entrySet()) {
+            nodes.put(i.getValue(), new RouterModel(graph, i.getValue()));
+        }
+    }
+
+    public abstract void processDeliveredPackage(Vertex v);
+
+    public void deliverResult(Package p) {
+        if (p != null) {
+            p.getTarget().getQueue().add(p);
+            Message message = p.getMsg();
+            System.out.println("Package " + p.getPackage_number() + " of message " + message.getMessage_number() + " has just received to the vertex ( " + p.getTarget().getId() + " )");
+        }
+    }
+
+    public void registerObserver(EventBus eventBus){
+        this.deliveryBus = eventBus;
     }
 }

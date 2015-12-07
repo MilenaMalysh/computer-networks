@@ -74,4 +74,6 @@ public abstract class Channel implements Comparable<Channel> {
 
     public abstract void cancel();
 
+    public abstract int getRealWeight(Vertex dest);
+
 }

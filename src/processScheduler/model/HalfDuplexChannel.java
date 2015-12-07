@@ -60,4 +60,9 @@ public class HalfDuplexChannel extends Channel {
         packageQueue.clear();
         workloadProperty().set(false);
     }
+
+    @Override
+    public int getRealWeight(Vertex dest) {
+        return getWeight()+packageQueue.stream().mapToInt(Package::getCounter).sum();
+    }
 }

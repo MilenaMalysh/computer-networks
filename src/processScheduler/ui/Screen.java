@@ -3,6 +3,7 @@ package processScheduler.ui;
 
 import com.google.common.eventbus.EventBus;
 import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -25,6 +26,7 @@ public class Screen{
     private Separator separatorHor1= new Separator();
     private Separator separatorHor2= new Separator();
     private GraphAdapter graphAdapter;
+    private final TransNet transnet;
 
 
     public Screen(Stage stage, GraphAdapter graphAdapter) {
@@ -63,7 +65,7 @@ public class Screen{
         vBox1.getChildren().addAll(graphAdapter.getScrollPane(),separatorHor1, testnet);
 
         FromOneToAnother shortdist = new FromOneToAnother(graphAdapter.getModel());
-        TransNet transnet = new TransNet();
+        transnet = new TransNet();
         vBox2.getChildren().addAll(shortdist,separatorHor2, transnet);
 
 
@@ -93,7 +95,9 @@ public class Screen{
         separatorHor2.setMaxHeight(2);
         separatorHor2.setPrefHeight(2);
         separatorHor2.setOrientation(Orientation.HORIZONTAL);
+    }
 
-
+    public void bindLabels(IntegerProperty dataPkgs, IntegerProperty sysPkgs, IntegerProperty systemTime, IntegerProperty averageTime) {
+        transnet.bindLabels(dataPkgs, sysPkgs, systemTime, averageTime);
     }
 }

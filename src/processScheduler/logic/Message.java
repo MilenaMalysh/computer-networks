@@ -15,6 +15,8 @@ public class Message {
     private Vertex target;
     private Vertex source;
     private int message_number;
+    private int start;
+    private int deliveryTime;
 
     public Message(int message_size, Vertex target, Vertex source, int message_number) {
         this.target = target;
@@ -66,5 +68,25 @@ public class Message {
 
     public LinkedHashMap<Package, Boolean> getDeliveryMap(){
         return packages;
+    }
+
+    public boolean isDelivered(){
+        return packages.entrySet().stream().allMatch(Map.Entry::getValue);
+    }
+
+    public int getStart() {
+        return start;
+    }
+
+    public void setStart(int start) {
+        this.start = start;
+    }
+
+    public int getDeliveryTime() {
+        return deliveryTime;
+    }
+
+    public void setDeliveryTime(int deliveryTime) {
+        this.deliveryTime = deliveryTime;
     }
 }

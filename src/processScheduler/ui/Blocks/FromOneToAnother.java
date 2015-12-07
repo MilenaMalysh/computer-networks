@@ -100,7 +100,7 @@ public class FromOneToAnother extends BorderPane {
                         (field.getText().isEmpty())?0:Integer.parseInt(field.getText())));
 
                         */
-                Strategy.eventBus1.post(ev);
+                Strategy.eventBus.post(ev);
             }
         });
 

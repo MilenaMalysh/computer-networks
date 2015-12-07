@@ -1,6 +1,7 @@
 package processScheduler.ui.graph;
 
 import com.google.common.eventbus.EventBus;
+import com.sun.javafx.geom.Edge;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -11,11 +12,12 @@ import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import processScheduler.model.Channel;
 import processScheduler.model.DuplexChannel;
+import processScheduler.model.HalfDuplexChannel;
 import processScheduler.model.Vertex;
 import processScheduler.ui.graph.vertex.TextCircleVertexView;
 import processScheduler.ui.graph.vertex.VertexView;
-
 
 import java.util.Optional;
 import java.util.Set;
@@ -27,6 +29,7 @@ public class MouseGestures {
     GraphAdapter graphAdapter;
 
     EventBus eventBus;
+
     public MouseGestures(GraphAdapter graphAdapter, EventBus eventBus) {
         this.graphAdapter = graphAdapter;
         this.eventBus = eventBus;
@@ -56,47 +59,50 @@ public class MouseGestures {
                             System.out.println(actionEvent.getTarget().equals(TextCircleVertexView.items[0]));
                             if (actionEvent.getTarget().equals(TextCircleVertexView.items[0])) {
                                 graphAdapter.removeVertex(node.getVertexId());
-                            } else if (actionEvent.getTarget().equals(TextCircleVertexView.items[1])) {
-                                Set<Vertex> options = graphAdapter.allVertexes.keySet();
-                                ChoiceDialog<Vertex> dialog = new ChoiceDialog<Vertex>(options.iterator().next(), options);
-                                dialog.setTitle("Adding edge");
-                                dialog.setHeaderText("Adding Edge from vertex " + node.getVertexId());
-                                dialog.setContentText("Choose target edge");
-                                Optional<Vertex> result = dialog.showAndWait();
-                                if (result.isPresent()) {
-                                    Vertex selected = result.get();
-                                    Vertex source = graphAdapter.allVertexes.inverse().get(node);
-                                    if (source.equals(selected)) {
-                                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                                        alert.setTitle("Adding error");
-                                        alert.setHeaderText("Cannot add edge");
-                                        alert.setContentText("Reason: cannot add circular edges");
-                                        alert.show();
-                                        return;
-                                    }
-                                    TextInputDialog dialogWeigth = new TextInputDialog("");
-                                    dialog.setTitle("Add node");
-                                    dialog.setContentText("Enter the node number:");
-                                    dialogWeigth.getEditor().textProperty().addListener(new ChangeListener<String>() {
-                                        @Override
-                                        public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                                            if (newValue.matches("\\d*")) {
-                                            } else {
-                                                dialogWeigth.getEditor().setText(oldValue);
-                                            }
+                            } else if (actionEvent.getTarget().equals(TextCircleVertexView.items[1]) || actionEvent.getTarget().equals(TextCircleVertexView.items[2])) {
+                                ChoiceDialog<String> typeDialog = new ChoiceDialog<String>("Duplex", "Duplex", "HalfDuplex");
+                                typeDialog.setTitle("Adding channel");
+                                typeDialog.setHeaderText("Channel type");
+                                typeDialog.setContentText("Choose channel type");
+                                Optional<String> type = typeDialog.showAndWait();
+                                if (type.isPresent()) {
+                                    Class<? extends Channel> typeClass = type.equals("Duplex")?DuplexChannel.class: HalfDuplexChannel.class;
+                                    Set<Vertex> options = graphAdapter.allVertexes.keySet();
+                                    ChoiceDialog<Vertex> dialog = new ChoiceDialog<Vertex>(options.iterator().next(), options);
+                                    dialog.setTitle("Adding channel");
+                                    dialog.setHeaderText("Adding channel from vertex " + node.getVertexId());
+                                    dialog.setContentText("Choose target vertex");
+                                    Optional<Vertex> result = dialog.showAndWait();
+                                    if (result.isPresent()) {
+                                        Vertex selected = result.get();
+                                        Vertex source = graphAdapter.allVertexes.inverse().get(node);
+                                        if (source.equals(selected)) {
+                                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                                            alert.setTitle("Adding error");
+                                            alert.setHeaderText("Cannot add channel");
+                                            alert.setContentText("Reason: cannot add circular channels");
+                                            alert.show();
+                                            return;
                                         }
-                                    });
-                                    Optional<String> resultWeight = dialogWeigth.showAndWait();
-                                    if (resultWeight.isPresent()) {
-                                        graphAdapter.model.addEdge(graphAdapter.model.generateEdge(source.getId(), selected.getId(), Integer.valueOf(resultWeight.get()),DuplexChannel.class));
+                                        ChoiceDialog<Integer> dialogWeigth =  new ChoiceDialog<>(1, 1, 2, 4, 5, 6, 7, 10, 12, 15, 18);
+                                        dialogWeigth.setTitle("Adding channel");
+                                        dialogWeigth.setHeaderText("Set weight for channel");
+                                        dialogWeigth.setContentText("Choose channel weight:");
+                                        Optional<Integer> resultWeight = dialogWeigth.showAndWait();
+                                        if (resultWeight.isPresent()) {
+                                            Integer weight = resultWeight.get();
+                                            if (actionEvent.getTarget().equals(TextCircleVertexView.items[2]))
+                                                weight = weight * 3;
+                                            graphAdapter.model.addEdge(graphAdapter.model.generateEdge(source.getId(), selected.getId(), weight, typeClass));
+                                        }
                                     }
                                 }
                             }
                         }
                     };
                     TextCircleVertexView.CONTEXT_MENU.setOnAction(onContextMenuClicked);
-                }else{
-                    if(event.getButton()==MouseButton.MIDDLE){
+                } else {
+                    if (event.getButton() == MouseButton.MIDDLE) {
                         eventBus.post(new MouseGraphEvent(0, graphAdapter.allVertexes.inverse().get(node)));
                     }
                 }

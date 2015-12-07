@@ -43,7 +43,7 @@ public class TestNet extends BorderPane {
             public void handle(ActionEvent event) {
                 //Strategy strategy = new Strategy();
                 playButton.setDisable(false);
-                Strategy.eventBus1.post(new StopEvent());
+                Strategy.eventBus.post(new StopEvent());
             }
         });
 
@@ -54,7 +54,7 @@ public class TestNet extends BorderPane {
                 PlayEvent ev =new PlayEvent(rb1.isSelected() ? PlayEvent.DATAGRAM : PlayEvent.VIRTUAL);
                 //eventBus.post(ev);
                 playButton.setDisable(true);
-               Strategy.eventBus1.post(ev);
+               Strategy.eventBus.post(ev);
             }
         });
 

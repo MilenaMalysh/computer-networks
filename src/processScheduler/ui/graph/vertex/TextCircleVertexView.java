@@ -16,7 +16,9 @@ import javafx.scene.text.TextAlignment;
 public class TextCircleVertexView extends VertexView {
 
     private static final Font FONT = new Font(14);
-    public static final MenuItem[] items = {new MenuItem("Delete"), new MenuItem("Add edge")};
+    public static final MenuItem[] items = {new MenuItem("Delete"),
+            new MenuItem("Add regular edge"),
+            new MenuItem("Add satellite edge")};
     public static final ContextMenu CONTEXT_MENU = new ContextMenu(items);
 
     public TextCircleVertexView(int cellId, IntegerProperty status) {

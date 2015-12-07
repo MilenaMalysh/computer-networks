@@ -91,4 +91,13 @@ public class DuplexChannel extends Channel {
         targetSourceQueue.clear();
         workloadProperty().set(false);
     }
+
+    @Override
+    public int getRealWeight(Vertex dest) {
+        if(dest.equals(getTarget()))
+            return getWeight() + sourceTargetQueue.stream().mapToInt(Package::getCounter).sum();
+        else{
+            return getWeight() + targetSourceQueue.stream().mapToInt(Package::getCounter).sum();
+        }
+    }
 }

@@ -27,11 +27,11 @@ public class RouterModel {
         this.table = new RouterTable();
         this.source = source;
         this.rev_path = new TreeMap<>();
-        BildTree();
-        Reverse_Table();
+        buildTree();
+        reverseTable();
     }
 
-    public void BildTree(){
+    public void buildTree(){
 
         for(Map.Entry<Integer, Vertex> i:graph.getVertexes().entrySet()){
             weigths.put(i.getValue(), -1);
@@ -43,7 +43,7 @@ public class RouterModel {
             list_unprocessed.remove(temp);
 
             for (Map.Entry<Vertex, Channel>i : temp.getNeighbours().entrySet()){
-                temp_weigth = weigths.get(temp)+i.getValue().getWeight();
+                temp_weigth = weigths.get(temp)+i.getValue().getRealWeight(i.getKey());
                 if (  (temp_weigth< weigths.get(i.getKey()))  ||  (weigths.get(i.getKey())==-1)){
                     weigths.put(i.getKey(), temp_weigth);
                     rev_path.put(i.getKey(),temp);
@@ -73,7 +73,7 @@ public class RouterModel {
         return rev_path;
     }
 
-    public void Reverse_Table(){
+    public void reverseTable(){
         for (Map.Entry<Vertex,Vertex> i:rev_path.entrySet()){
             Vertex next;
             next =i.getValue();
