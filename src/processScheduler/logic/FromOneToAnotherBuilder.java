@@ -21,8 +21,8 @@ public class FromOneToAnotherBuilder extends AbstractBuilder {
 
     @Override
     public Message build(int amount_of_messages) {
-        int current_message_size = align_message_size(message_size);
-        Message message = new Message(current_message_size, target, source, amount_of_messages);
+        //int current_message_size = align_message_size(message_size);
+        Message message = new Message(message_size, target, source, amount_of_messages);
         return message;
     }
 

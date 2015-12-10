@@ -5,7 +5,6 @@ import com.google.common.eventbus.Subscribe;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.beans.binding.Bindings;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -27,7 +26,7 @@ public class Strategy {
     private AbstractBuilder builder;
     private Timeline timeline;
     private final int TICK_DURATION = 100;
-    private final int TICKSFORMESSAGE = 100;
+    private final int TICKSFORMESSAGE =100;
     private int counter;
     private PlaybackMode playbackMode;
     private ObservableList<Message> sentMessages;
@@ -83,7 +82,7 @@ public class Strategy {
     public void onPlayButton(TestNet.PlayEvent event) {
         playbackMode = PlaybackMode.REPEATING;
         cancel();
-        counter = 100;
+        counter = TICKSFORMESSAGE;
         if (mode != null)
             mode.cancel();
         builder = new RandomBuilder(graph);

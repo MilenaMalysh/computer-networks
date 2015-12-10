@@ -33,22 +33,22 @@ public class Screen{
         stage.show();
 
         //--------------Create Menu--------------------//
-        menu1 = new Menu("File");
-        menu2 = new Menu("Parameters");
-        menu3 = new Menu("Help");
+        //menu1 = new Menu("File");
+        //menu2 = new Menu("Parameters");
+       // menu3 = new Menu("Help");
         this.graphAdapter = graphAdapter;
-        MenuItem newMenuItem = new MenuItem("New");
-        MenuItem loadMenuItem = new MenuItem("Load");
-        MenuItem saveMenuItem = new MenuItem("Save");
-        MenuItem exitMenuItem = new MenuItem("Exit");
-        exitMenuItem.setOnAction(actionEvent -> Platform.exit());
+        //MenuItem newMenuItem = new MenuItem("New");
+        //MenuItem loadMenuItem = new MenuItem("Load");
+        //MenuItem saveMenuItem = new MenuItem("Save");
+        //MenuItem exitMenuItem = new MenuItem("Exit");
+        //exitMenuItem.setOnAction(actionEvent -> Platform.exit());
 
-        menu1.getItems().addAll(newMenuItem, loadMenuItem, saveMenuItem,
-                new SeparatorMenuItem(), exitMenuItem);
+        //menu1.getItems().addAll(newMenuItem, loadMenuItem, saveMenuItem,
+        //        new SeparatorMenuItem(), exitMenuItem);
 
 
-        MenuBar menuBar = new MenuBar();
-        menuBar.getMenus().addAll(menu1, menu2, menu3);
+        //MenuBar menuBar = new MenuBar();
+        //menuBar.getMenus().addAll(menu1, menu2, menu3);
         //--------------Create Main Screen--------------//
         VBox vBox = new VBox(2);
         HBox hBox = new HBox(2);
@@ -70,10 +70,11 @@ public class Screen{
 
 
         hBox.getChildren().addAll(vBox1,separatorVer,vBox2);
-        vBox.getChildren().addAll(menuBar,hBox);
+        //vBox.getChildren().addAll(menuBar,hBox);
+        vBox.getChildren().addAll(hBox);
 
         //--------------Set Scene-----------------------//
-        menuBar.prefWidthProperty().bind(stage.widthProperty());
+        //menuBar.prefWidthProperty().bind(stage.widthProperty());
         stage.setScene(scene);
 
         RandomLayout randomLayout = new RandomLayout(graphAdapter);

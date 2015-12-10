@@ -1,6 +1,7 @@
 package processScheduler.ui.graph;
 
 import com.google.common.eventbus.EventBus;
+import com.sun.glass.ui.Application;
 import com.sun.javafx.geom.Edge;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -29,6 +30,7 @@ public class MouseGestures {
     GraphAdapter graphAdapter;
 
     EventBus eventBus;
+    private EventHandler<MouseEvent> onEdgeMouseCLick;
 
     public MouseGestures(GraphAdapter graphAdapter, EventBus eventBus) {
         this.graphAdapter = graphAdapter;
@@ -84,7 +86,7 @@ public class MouseGestures {
                                             alert.show();
                                             return;
                                         }
-                                        ChoiceDialog<Integer> dialogWeigth =  new ChoiceDialog<>(1, 1, 2, 4, 5, 6, 7, 10, 12, 15, 18);
+                                        ChoiceDialog<Integer> dialogWeigth =  new ChoiceDialog<>(1, 1, 3, 4, 5, 7, 10, 12, 14, 15, 18, 21, 22, 25);
                                         dialogWeigth.setTitle("Adding channel");
                                         dialogWeigth.setHeaderText("Set weight for channel");
                                         dialogWeigth.setContentText("Choose channel weight:");
@@ -160,5 +162,14 @@ public class MouseGestures {
     class DragContext {
         double x;
         double y;
+    }
+
+    public void makeClickable(final EdgeView view){
+        onEdgeMouseCLick = event -> {
+            if(event.getButton()==MouseButton.SECONDARY){
+                graphAdapter.model.removeEdge(graphAdapter.allEdges.inverse().get(view));
+            }
+        };
+        view.setOnMouseClicked(onEdgeMouseCLick);
     }
 }

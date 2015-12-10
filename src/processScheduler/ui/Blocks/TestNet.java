@@ -1,16 +1,23 @@
 package processScheduler.ui.Blocks;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.image.Image;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.control.Label;
+import processScheduler.logic.Message;
 import processScheduler.logic.Strategy;
+
+import java.awt.*;
 
 
 /**
@@ -19,7 +26,8 @@ import processScheduler.logic.Strategy;
 public class TestNet extends BorderPane {
 
     private BorderPane header;
-    private HBox vboxmain;
+    private VBox vboxmain;
+    private HBox hboxmain;
     private ToggleGroup radiogroup;
     private Button playButton;
     private Button stopButton;
@@ -32,6 +40,7 @@ public class TestNet extends BorderPane {
 
         Label label = new Label("Testing network");
         label.setFont(new Font("Times New Roman", 16));
+
 
 
         //---------------Buttons---------------------//
@@ -66,7 +75,8 @@ public class TestNet extends BorderPane {
         header.setLeft(label);
         //-------------Body----------------------//
 
-        vboxmain = new HBox(2);
+        vboxmain = new VBox(2);
+        hboxmain = new HBox(2);
         radiogroup = new ToggleGroup();
 
         rb1 = new RadioButton("Datagram mode");
@@ -76,7 +86,9 @@ public class TestNet extends BorderPane {
         rb2 = new RadioButton("Virtual channel mode");
         rb2.setToggleGroup(radiogroup);
 
-        vboxmain.getChildren().addAll(rb1, rb2);
+
+        hboxmain.getChildren().addAll(rb1, rb2);
+        vboxmain.getChildren().addAll(hboxmain);
 
         //-------------Resume-------------------//
         set_visual_part();

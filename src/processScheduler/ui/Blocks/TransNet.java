@@ -81,8 +81,8 @@ public class TransNet extends BorderPane {
 
         BorderPane bordpane3 = new BorderPane();
 
-        textarea = new TextArea();
-        bordpane3.setCenter(textarea);
+        //textarea = new TextArea();
+        //bordpane3.setCenter(textarea);
 
         //---------------Resume-------------------//
 
@@ -100,13 +100,13 @@ public class TransNet extends BorderPane {
         this.setMaxSize(300,400);
         this.setPrefSize(300,400);
 
-        textarea.setPrefColumnCount(20);
-        textarea.maxHeight(250);
-        textarea.minHeight(250);
-        textarea.prefHeight(250);
-        textarea.maxWidth(200);
-        textarea.minWidth(200);
-        textarea.prefWidth(200);
+        //textarea.setPrefColumnCount(20);
+        //textarea.maxHeight(250);
+        //textarea.minHeight(250);
+        //textarea.prefHeight(250);
+        //textarea.maxWidth(200);
+        //textarea.minWidth(200);
+        //textarea.prefWidth(200);
 
         vboxmain.setMaxWidth(250);
         vboxmain.setMinWidth(250);

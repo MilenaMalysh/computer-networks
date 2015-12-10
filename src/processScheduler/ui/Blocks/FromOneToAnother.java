@@ -1,5 +1,7 @@
 package processScheduler.ui.Blocks;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,6 +14,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
 import javafx.scene.text.Font;
+import processScheduler.logic.Message;
 import processScheduler.logic.Strategy;
 import processScheduler.model.Graph;
 import processScheduler.model.Vertex;
@@ -30,7 +33,8 @@ public class FromOneToAnother extends BorderPane {
     private BorderPane bordpane1;
     private VBox vboxmain;
     private Button btn1;
-    private TextField field;
+    private TextField field1;
+    private TextField field2;
 //    private Button btn2;
 
 
@@ -81,9 +85,22 @@ public class FromOneToAnother extends BorderPane {
         btn1 = new Button();
         btn1.setText("Send");
 
-        field = new TextField();
+        field1 = new TextField();
+        field2 = new TextField();
+        field2.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if(newValue.matches("\\d*")){
+                    Message.PACK_SIZE = Integer.parseInt(newValue);
+                }
+                else {
+                    field2.setText(oldValue);
+                }
+            }
+        });
 
-        btnvsedit.getChildren().addAll(field, btn1);
+
+        btnvsedit.getChildren().addAll(field1, field2 , btn1);
         btnvsedit.setMargin(btn1, new Insets(2,2,2,2));
         bordpane2.setCenter(btnvsedit);
 
@@ -92,7 +109,7 @@ public class FromOneToAnother extends BorderPane {
             public void handle(ActionEvent event) {
                 PlayEvent ev =new PlayEvent(graph.findVertex(list1.getSelectionModel().getSelectedItem()),
                         graph.findVertex(list2.getSelectionModel().getSelectedItem()),
-                        Integer.parseInt(field.getText()),
+                        Integer.parseInt(field1.getText()),
                         TestNet.getRb1().isSelected() ? PlayEvent.DATAGRAM : PlayEvent.VIRTUAL);
 /*                eventBus.post(new Event(
                         list1.getSelectionModel().selectedItemProperty().get(),
@@ -148,11 +165,17 @@ public class FromOneToAnother extends BorderPane {
         vboxmain.setMinWidth(150);
         vboxmain.setPrefWidth(150);
 
-        field.setPrefColumnCount(1);
-        field.setPromptText("Enter Message size");
-        field.setMinWidth(120);
-        field.setMaxWidth(120);
-        field.setPrefWidth(120);
+        field1.setPrefColumnCount(1);
+        field1.setPromptText("Enter Message size");
+        field1.setMinWidth(120);
+        field1.setMaxWidth(120);
+        field1.setPrefWidth(120);
+
+        field2.setPrefColumnCount(1);
+        field2.setPromptText("Enter Package size");
+        field2.setMinWidth(120);
+        field2.setMaxWidth(120);
+        field2.setPrefWidth(120);
 
         this.setMinSize(300,200);
         this.setMaxSize(300,200);

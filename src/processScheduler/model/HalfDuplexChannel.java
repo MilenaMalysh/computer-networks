@@ -44,7 +44,6 @@ public class HalfDuplexChannel extends Channel {
         Package first = null;
         if (!packageQueue.isEmpty() && packageQueue.getFirst().isDelivered()) {
             first = packageQueue.removeFirst();
-            return first;
         }
         workloadProperty().setValue(!packageQueue.isEmpty());
         return first;

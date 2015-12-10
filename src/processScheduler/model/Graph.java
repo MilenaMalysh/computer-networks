@@ -59,6 +59,7 @@ public class Graph implements Serializable {
         if(alreadyAdded){
             removeEdge(e);
         }
+
         edges.put(e.getSource(), e.getTarget(), e);
         eventBus.post(new GraphEvent.Edge(e, GraphEvent.ADDED));
         return !alreadyAdded;
@@ -96,6 +97,8 @@ public class Graph implements Serializable {
 
     public boolean removeEdge(Channel e) {
         eventBus.post(new GraphEvent.Edge(e, GraphEvent.REMOVED));
+        e.getTarget().getNeighbours().remove(e.getSource());
+        e.getSource().getNeighbours().remove(e.getTarget());
         return edges.remove(e.getSource(), e.getTarget())!=null;
     }
 

@@ -8,8 +8,7 @@ import java.util.*;
  * Created by Milena on 02.12.2015.
  */
 public class Message {
-    public static final int PACK_SIZE = 2;
-    private float pack_amount_f;
+    public static int PACK_SIZE = 2;
     private int pack_amount;
     private LinkedHashMap<Package, Boolean> packages = new LinkedHashMap<>();
     private Vertex target;
@@ -22,13 +21,9 @@ public class Message {
         this.target = target;
         this.source = source;
         this.message_number = message_number;
-        this.pack_amount_f = ((float) message_size) / PACK_SIZE;
-        if (this.pack_amount_f != (int) this.pack_amount_f) {
-            this.pack_amount = (int) this.pack_amount_f + 1;
-        } else {
-            this.pack_amount = (int) pack_amount_f;
-        }
-
+        this.pack_amount =  message_size/ PACK_SIZE;
+        if(pack_amount*PACK_SIZE<message_size)
+            pack_amount++;
         for (int i = 1; i <= this.pack_amount; i++) {
             packages.put(new Package(this.target, this.source, i, PACK_SIZE, this), false);
         }

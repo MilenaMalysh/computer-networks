@@ -16,7 +16,7 @@ public class RandomBuilder extends AbstractBuilder {
     public Message build(int amount_of_messages) {
         Random random = new Random();
         //FOR TEST
-        int message_size = random.nextInt(7) + 1;
+        int message_size = random.nextInt(4) + 4;
         //END
         //int message_size = random.nextInt(2047)+1;
         int current_message_size = align_message_size(message_size);

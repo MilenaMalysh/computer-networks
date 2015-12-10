@@ -147,13 +147,13 @@ public class GraphAdapter {
         ObservableList<String> data = FXCollections.observableArrayList();
 
         for (Map.Entry <Vertex,Vertex> k: new RouterModel(model, event.vertex).getTable().getRouting().entrySet()) {
-            data.addAll("Cur: "+k.getKey().getId()+ "Prev: "+k.getValue().getId());
+            data.addAll("Goal: "+k.getKey().getId()+ "Through: "+k.getValue().getId()+ "Length: "+model.findChannel(k.getValue(),event.vertex).getWeight());
         }
 
         list.setItems(data);
-        list.setMinSize(100, 200);
-        list.setMaxSize(100, 200);
-        list.setPrefSize(100, 200);
+        //list.setMinSize(100, 200);
+        //list.setMaxSize(100, 200);
+        //list.setPrefSize(100, 200);
 
         vbox.getChildren().addAll(label,list);
 
@@ -186,6 +186,7 @@ public class GraphAdapter {
         EdgeView view = new EdgeView(allVertexes.get(e.getSource()), allVertexes.get(e.getTarget()), e.getWeight(), e.workloadProperty());
         allEdges.put(e, view);
         vertexLayer.getChildren().add(0,view);
+        mouseGestures.makeClickable(view);
     }
 
 
