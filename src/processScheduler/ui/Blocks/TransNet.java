@@ -37,7 +37,7 @@ public class TransNet extends BorderPane {
     public TransNet() {
 
         Label label = new Label("Transfer parameters");
-        label.setFont(new Font("Times New Roman", 16));
+        label.setFont(new Font("Times New Roman", 18));
 
         vboxmain = new VBox(2);
 
@@ -50,12 +50,16 @@ public class TransNet extends BorderPane {
 
         Label label11 = new Label();
         label11.setText("Data packages:");
+        label11.setFont(new Font("Times New Roman", 16));
         Label label12 = new Label();
         label12.setText("Syst. packages:");
+        label12.setFont(new Font("Times New Roman", 16));
         Label label13 = new Label();
         label13.setText("Ticks:");
+        label13.setFont(new Font("Times New Roman", 16));
         Label label14 = new Label();
         label14.setText("Avg. msg. delivery");
+        label14.setFont(new Font("Times New Roman", 16));
 
         vBox1.getChildren().addAll(label11,label12, label13, label14);
         vBox1.setMargin(label11, new Insets(4));
@@ -64,9 +68,13 @@ public class TransNet extends BorderPane {
         vBox1.setMargin(label14, new Insets(4));
 
         label21 = new Label();
+        label21.setFont(new Font("Times New Roman", 16));
         label22 = new Label();
+        label22.setFont(new Font("Times New Roman", 16));
         label23 = new Label();
+        label23.setFont(new Font("Times New Roman", 16));
         label24 = new Label();
+        label24.setFont(new Font("Times New Roman", 16));
 
         vBox2.getChildren().addAll(label21, label22, label23, label24);
         vBox2.setMargin(label21, new Insets(4));

@@ -39,7 +39,7 @@ public class TestNet extends BorderPane {
         header = new BorderPane();
 
         Label label = new Label("Testing network");
-        label.setFont(new Font("Times New Roman", 16));
+        label.setFont(new Font("Times New Roman", 18));
 
 
 
@@ -71,7 +71,7 @@ public class TestNet extends BorderPane {
         HBox btns = new HBox(2);
         btns.getChildren().addAll(playButton,stopButton);
 
-        header.setRight(btns);
+        header.setCenter(btns);
         header.setLeft(label);
         //-------------Body----------------------//
 
@@ -80,10 +80,12 @@ public class TestNet extends BorderPane {
         radiogroup = new ToggleGroup();
 
         rb1 = new RadioButton("Datagram mode");
+        rb1.setFont(new Font("Times New Roman", 16));
         rb1.setToggleGroup(radiogroup);
         rb1.setSelected(true);
 
         rb2 = new RadioButton("Virtual channel mode");
+        rb2.setFont(new Font("Times New Roman", 16));
         rb2.setToggleGroup(radiogroup);
 
 
@@ -94,14 +96,17 @@ public class TestNet extends BorderPane {
         set_visual_part();
         this.setTop(header);
         this.setCenter(vboxmain);
-        this.setMargin(label, new javafx.geometry.Insets(0, 10, 10, 10));
+        //this.setMargin(label, new javafx.geometry.Insets(0, 10, 10, 10));
 
     }
     private void set_visual_part(){
-        this.setMinSize(500, 200);
-        this.setMaxSize(500, 200);
-        this.setPrefSize(500, 200);
+        //this.setMinSize(500, 200);
+        //this.setMaxSize(500, 200);
+        //this.setPrefSize(500, 200);
 
+        this.setMinSize(500, 60);
+        this.setMaxSize(500, 60);
+        this.setPrefSize(500, 60);
         Image imagePlay = new Image(getClass().getResourceAsStream("Images/play1.png"));
         this.playButton.setGraphic(new ImageView(imagePlay));
         this.playButton.prefHeight(15);

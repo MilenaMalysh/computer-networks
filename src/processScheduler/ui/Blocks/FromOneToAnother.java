@@ -45,7 +45,7 @@ public class FromOneToAnother extends BorderPane {
 
         Label label = new Label("One message transfer");
 
-        label.setFont(new Font("Times New Roman", 16));
+        label.setFont(new Font("Times New Roman", 18));
 
 
         bordpane1 = new BorderPane();
@@ -53,7 +53,7 @@ public class FromOneToAnother extends BorderPane {
 
         vbox1 = new VBox();
         Label labelfrom = new Label("From");
-        labelfrom.setFont(new Font("Times New Roman", 12));
+        labelfrom.setFont(new Font("Times New Roman", 16));
         list1 = new ListView<Integer>();
         ObservableList<Integer> items1 = FXCollections.observableArrayList();
         items1.addAll(graph.getVertexesesId());
@@ -65,7 +65,7 @@ public class FromOneToAnother extends BorderPane {
 
         vbox2 = new VBox();
         Label labelto = new Label("To");
-        labelto.setFont(new Font("Times New Roman", 12));
+        labelto.setFont(new Font("Times New Roman", 16));
         list2 = new ListView<Integer>();
         ObservableList<Integer> items2 = FXCollections.observableArrayList();
         items2.addAll(graph.getVertexesesId());
@@ -101,7 +101,9 @@ public class FromOneToAnother extends BorderPane {
 
 
         btnvsedit.getChildren().addAll(field1, field2 , btn1);
-        btnvsedit.setMargin(btn1, new Insets(2,2,2,2));
+        btnvsedit.setMargin(btn1, new Insets(0,6,6,6));
+        btnvsedit.setMargin(field1, new Insets(0,1,1,6));
+        btnvsedit.setMargin(field2, new Insets(0,1,1,6));
         bordpane2.setCenter(btnvsedit);
 
         btn1.setOnAction(new EventHandler<ActionEvent>() {
@@ -135,21 +137,21 @@ public class FromOneToAnother extends BorderPane {
         set_visual_part();
         this.setTop(label);
         this.setCenter(vboxmain);
-        this.setMargin(label, new Insets(0,10,10,10));
+        this.setMargin(label, new Insets(0,20,20,20));
 
     }
     private void set_visual_part(){
 
-        list1.setMaxHeight(72);
-        list1.setMinHeight(72);
-        list1.setPrefHeight(72);
+        list1.setMaxHeight(100);
+        list1.setMinHeight(100);
+        list1.setPrefHeight(100);
         list1.setMaxWidth(60);
         list1.setMinWidth(60);
         list1.setPrefWidth(60);
 
-        list2.setMaxHeight(72);
-        list2.setMinHeight(72);
-        list2.setPrefHeight(72);
+        list2.setMaxHeight(100);
+        list2.setMinHeight(100);
+        list2.setPrefHeight(100);
         list2.setMaxWidth(60);
         list2.setMinWidth(60);
         list2.setPrefWidth(60);
@@ -177,9 +179,9 @@ public class FromOneToAnother extends BorderPane {
         field2.setMaxWidth(120);
         field2.setPrefWidth(120);
 
-        this.setMinSize(300,200);
-        this.setMaxSize(300,200);
-        this.setPrefSize(300,200);
+        this.setMinSize(300,400);
+        this.setMaxSize(300,400);
+        this.setPrefSize(300,400);
     }
 
 

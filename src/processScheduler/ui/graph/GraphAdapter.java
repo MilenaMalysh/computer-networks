@@ -111,9 +111,15 @@ public class GraphAdapter {
                 }
             }
         });
-        scrollPane.setMinSize(500, 400);
-        scrollPane.setMaxSize(500, 400);
-        scrollPane.setPrefSize(500, 400);
+        //scrollPane.setMinSize(500, 400);
+        //scrollPane.setMaxSize(500, 400);
+        //scrollPane.setPrefSize(500, 400);
+        /*scrollPane.setMinSize(1000, 550);
+        scrollPane.setMinSize(1000, 550);
+        scrollPane.setMinSize(1000, 550);*/
+        //scrollPane.setMinSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        //scrollPane.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        //scrollPane.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
     }
 
     @Subscribe

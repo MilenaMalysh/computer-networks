@@ -27,8 +27,8 @@ public class RandomLayout extends Layout {
     public void execute() {
         Set<Map.Entry<Vertex, VertexView>> vertexes = graph.getAllVertexes();
         for (Map.Entry<Vertex, VertexView> vertex : vertexes) {
-            double x = rnd.nextDouble() * 450;
-            double y = rnd.nextDouble() * 350;
+            double x = rnd.nextDouble() * 900;
+            double y = rnd.nextDouble() * 500;
             vertex.getValue().relocate(x, y);
         }
     }

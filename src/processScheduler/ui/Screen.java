@@ -8,6 +8,7 @@ import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import processScheduler.ui.Blocks.FromOneToAnother;
@@ -50,10 +51,10 @@ public class Screen{
         //MenuBar menuBar = new MenuBar();
         //menuBar.getMenus().addAll(menu1, menu2, menu3);
         //--------------Create Main Screen--------------//
-        VBox vBox = new VBox(2);
         HBox hBox = new HBox(2);
 
-        Scene scene = new Scene(vBox, 802, 602);
+        //Scene scene = new Scene(vBox, 802, 602);
+        Scene scene = new Scene(hBox, 1302, 652);
         stage.setScene(scene);
 
         VBox vBox1 = new VBox(2);
@@ -67,12 +68,10 @@ public class Screen{
         FromOneToAnother shortdist = new FromOneToAnother(graphAdapter.getModel());
         transnet = new TransNet();
         vBox2.getChildren().addAll(shortdist,separatorHor2, transnet);
-
+        VBox.setVgrow(graphAdapter.getScrollPane(), Priority.ALWAYS);
 
         hBox.getChildren().addAll(vBox1,separatorVer,vBox2);
-        //vBox.getChildren().addAll(menuBar,hBox);
-        vBox.getChildren().addAll(hBox);
-
+        HBox.setHgrow(vBox1, Priority.ALWAYS);
         //--------------Set Scene-----------------------//
         //menuBar.prefWidthProperty().bind(stage.widthProperty());
         stage.setScene(scene);
