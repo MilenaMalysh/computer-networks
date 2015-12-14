@@ -1,5 +1,6 @@
 package processScheduler.logic;
 
+import processScheduler.model.Channel;
 import processScheduler.model.Graph;
 import processScheduler.model.Vertex;
 
