@@ -46,7 +46,19 @@ public class TestNet extends BorderPane {
         //---------------Buttons---------------------//
         playButton =  new Button();
         stopButton = new Button();
-
+        TextField intensity = new TextField("1000");
+        intensity.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if(newValue.matches("\\d*")){
+                    Message.PACK_SIZE = Integer.parseInt(newValue);
+                }
+                else {
+                    intensity.setText(oldValue);
+                }
+                Strategy.TICKSFORMESSAGE = Integer.parseInt(intensity.getText());
+            }
+        });
         stopButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -68,8 +80,10 @@ public class TestNet extends BorderPane {
         });
 
 
-        HBox btns = new HBox(2);
-        btns.getChildren().addAll(playButton,stopButton);
+        HBox btns = new HBox(10);
+        Label intensityLabel = new Label("Intensity:");
+        intensityLabel.setFont(new Font("Times New Roman", 16));
+        btns.getChildren().addAll(playButton,stopButton, intensityLabel, intensity);
 
         header.setCenter(btns);
         header.setLeft(label);

@@ -8,7 +8,7 @@ import java.util.*;
  * Created by Milena on 02.12.2015.
  */
 public class Message {
-    public static int PACK_SIZE = 2;
+    public static int PACK_SIZE = 16;
     private int pack_amount;
     private LinkedHashMap<Package, Boolean> packages = new LinkedHashMap<>();
     private Vertex target;
@@ -16,10 +16,14 @@ public class Message {
     private int message_number;
     private int start;
     private int deliveryTime;
+    private int confirmations;
+    private boolean transmitted;
 
     public Message(int message_size, Vertex target, Vertex source, int message_number) {
         this.target = target;
         this.source = source;
+        this.confirmations = 0;
+        this.transmitted = false;
         this.message_number = message_number;
         this.pack_amount =  message_size/ PACK_SIZE;
         if(pack_amount*PACK_SIZE<message_size)
@@ -83,5 +87,21 @@ public class Message {
 
     public void setDeliveryTime(int deliveryTime) {
         this.deliveryTime = deliveryTime;
+    }
+
+    public void notifyDelivery(Package pkg){
+        confirmations++;
+    }
+
+    public boolean isNotified(){
+        return packages.size()<=confirmations;
+    }
+
+    public boolean isTransmitted() {
+        return transmitted;
+    }
+
+    public void setTransmitted(boolean transmitted) {
+        this.transmitted = transmitted;
     }
 }

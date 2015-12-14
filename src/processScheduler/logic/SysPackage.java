@@ -7,11 +7,21 @@ import processScheduler.model.Vertex;
  */
 public class SysPackage extends Package {
     public Mode mode;
-    public SysPackage(Vertex target, Vertex source, int size, Message msg, Mode mode) {
-        super(target, source, -1, size, msg);
+    public SysPackage(Vertex target, Vertex source, Message msg, Mode mode) {
+        super(target, source, -1, mode.size, msg);
         this.mode = mode;
     }
-    public static enum Mode {
-        CONFIGURE, DECONFIGURE, ACCEPT
+
+    public enum Mode {
+        CONFIGURE(4,2), DECONFIGURE(4,3), ACCEPT(4,4), NOTIFY(2,5), NOTIFY_VIRTUAL(4,6);
+
+        public final int size;
+        public final int modeColorSelector;
+
+        Mode(int size, int modeColorSelector){
+
+            this.size = size;
+            this.modeColorSelector = modeColorSelector;
+        }
     }
 }

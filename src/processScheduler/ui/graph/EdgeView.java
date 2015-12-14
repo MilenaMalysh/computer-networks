@@ -20,7 +20,7 @@ public class EdgeView extends Group {
     private int weight;
     Line line;
 
-    public EdgeView(VertexView source, VertexView target, int weight, BooleanProperty workload) {
+    public EdgeView(VertexView source, VertexView target, int weight, IntegerProperty workload) {
 
         this.source = source;
         this.target = target;
@@ -43,7 +43,24 @@ public class EdgeView extends Group {
 
             @Override
             protected Paint computeValue() {
-                return workload.get() ? Color.VIOLET : Color.web("#BBBBBB");
+                switch (workload.get()){
+                    case 0:
+                        return Color.web("#BBBBBB");
+                    case 1:
+                        return Color.web("#0000FF");
+                    case 2:
+                        return Color.web("#FF9933");
+                    case 3:
+                        return Color.web("#CC0033");
+                    case 4:
+                        return Color.web("#66FF66");
+                    case 5:
+                        return Color.web("#00FFFF");//goluboy notify
+                    case 6:
+                        return Color.web("#00FFFF");//goluboy notify_virt
+                    default:
+                        return null;
+                }
             }
         });
         line.setStrokeWidth(2);

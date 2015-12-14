@@ -1,6 +1,7 @@
 package processScheduler.model;
 
 import processScheduler.logic.Package;
+import processScheduler.logic.SysPackage;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -23,11 +24,44 @@ public class DuplexChannel extends Channel {
     public void addToQueue(Package p) {
         p.setCounter(getWeight() * p.getSize());
         if (p.getSource().equals(getSource())) {
-            sourceTargetQueue.add(p);
+            sourceTargetQueue.addLast(p);
         } else {
-            targetSourceQueue.add(p);
+            targetSourceQueue.addLast(p);
         }
-        workloadProperty().setValue(!(sourceTargetQueue.isEmpty()&&targetSourceQueue.isEmpty()));
+        updateWorkload();
+    }
+
+    private void updateWorkload() {
+        if(targetSourceQueue.isEmpty()&&sourceTargetQueue.isEmpty())
+            workloadProperty().setValue(0);
+        else if(!targetSourceQueue.isEmpty()){
+            try{
+                SysPackage p = (SysPackage)targetSourceQueue.getFirst();
+                workloadProperty().setValue(p.mode.modeColorSelector);
+            }
+            catch (ClassCastException e){
+                workloadProperty().setValue(1);
+            }
+        }else if(!targetSourceQueue.isEmpty()){
+            try{
+                SysPackage p = (SysPackage)targetSourceQueue.getFirst();
+                workloadProperty().setValue(p.mode.modeColorSelector);
+            }
+            catch (ClassCastException e){
+                workloadProperty().setValue(1);
+            }
+        }
+    }
+
+    @Override
+    public void pushToQueue(Package p) {
+        p.setCounter(getWeight() * p.getSize());
+        if (p.getSource().equals(getSource())) {
+            sourceTargetQueue.addFirst(p);
+        } else {
+            targetSourceQueue.addFirst(p);
+        }
+        updateWorkload();
     }
 
     @Override
@@ -52,7 +86,7 @@ public class DuplexChannel extends Channel {
                 result = true;
             }
         }
-        workloadProperty().setValue(!(sourceTargetQueue.isEmpty()&&targetSourceQueue.isEmpty()));
+        updateWorkload();
         return result;
     }
 
@@ -62,7 +96,7 @@ public class DuplexChannel extends Channel {
             first = sourceTargetQueue.removeFirst();
             return first;
         }
-        workloadProperty().setValue(!(sourceTargetQueue.isEmpty()&&targetSourceQueue.isEmpty()));
+        updateWorkload();
         return first;
     }
 
@@ -72,7 +106,7 @@ public class DuplexChannel extends Channel {
             first = targetSourceQueue.removeFirst();
             return first;
         }
-        workloadProperty().setValue(!(sourceTargetQueue.isEmpty()&&targetSourceQueue.isEmpty()));
+        updateWorkload();
         return first;
     }
 
@@ -89,7 +123,7 @@ public class DuplexChannel extends Channel {
     public void cancel() {
         sourceTargetQueue.clear();
         targetSourceQueue.clear();
-        workloadProperty().set(false);
+        workloadProperty().set(0);
     }
 
     @Override

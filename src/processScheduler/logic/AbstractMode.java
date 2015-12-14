@@ -50,7 +50,7 @@ public abstract class AbstractMode {
     }
 
     public Message generate_message() {
-        amount_of_messages.setValue(amount_of_messages.get()+1);
+        amount_of_messages.setValue(amount_of_messages.get() + 1);
         Message message = builder.build(amount_of_messages.get());
         return message;
     }
@@ -94,7 +94,7 @@ public abstract class AbstractMode {
         }
     }
 
-    public void registerObserver(EventBus eventBus){
+    public void registerObserver(EventBus eventBus) {
         this.deliveryBus = eventBus;
     }
 }

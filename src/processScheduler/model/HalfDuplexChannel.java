@@ -3,6 +3,8 @@ package processScheduler.model;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import processScheduler.logic.Package;
+import processScheduler.logic.SysPackage;
+
 /**
  * Created by Milena on 05.12.2015.
  */
@@ -18,9 +20,31 @@ public class HalfDuplexChannel extends Channel {
     @Override
     public void addToQueue(Package p) {
         p.setCounter(getWeight()*p.getSize());
-        packageQueue.add(p);
-        workloadProperty().setValue(!packageQueue.isEmpty());
+        packageQueue.addLast(p);
+        updateWorkload();
 
+    }
+
+@Override
+    public void pushToQueue(Package p) {
+        p.setCounter(getWeight()*p.getSize());
+        packageQueue.addFirst(p);
+    updateWorkload();
+
+}
+
+    private void updateWorkload() {
+        if(packageQueue.isEmpty()){
+            workloadProperty().set(0);
+        }else {
+            try {
+                SysPackage p = (SysPackage) packageQueue.getFirst();
+                workloadProperty().setValue(p.mode.modeColorSelector);
+            }
+            catch (ClassCastException e){
+                workloadProperty().setValue(1);
+            }
+        }
     }
 
     @Override
@@ -45,7 +69,7 @@ public class HalfDuplexChannel extends Channel {
         if (!packageQueue.isEmpty() && packageQueue.getFirst().isDelivered()) {
             first = packageQueue.removeFirst();
         }
-        workloadProperty().setValue(!packageQueue.isEmpty());
+        updateWorkload();
         return first;
     }
 
@@ -57,7 +81,7 @@ public class HalfDuplexChannel extends Channel {
     @Override
     public void cancel() {
         packageQueue.clear();
-        workloadProperty().set(false);
+        workloadProperty().set(0);
     }
 
     @Override

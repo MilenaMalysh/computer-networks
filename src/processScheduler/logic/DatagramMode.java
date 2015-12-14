@@ -4,10 +4,11 @@ import processScheduler.model.Channel;
 import processScheduler.model.Graph;
 import processScheduler.model.Vertex;
 
+import java.util.Collection;
 import java.util.Set;
 
-public class DatagramMode extends AbstractMode{
-    public DatagramMode(Graph graph,AbstractBuilder builder) {
+public class DatagramMode extends AbstractMode {
+    public DatagramMode(Graph graph, AbstractBuilder builder) {
         super(graph, builder);
     }
 
@@ -26,20 +27,20 @@ public class DatagramMode extends AbstractMode{
     @Override
     public void processDeliveredPackage(Vertex v) {
         Package pkg = v.getQueue().pollFirst();
-        if(pkg.getGlobalTarget().equals(v)){
+        if (pkg.getGlobalTarget().equals(v)) {
             Message message = pkg.getMsg();
             deliveryBus.post(pkg);
+            if(!(pkg instanceof SysPackage)){
             message.confirmDelivery(pkg);
-            if(message.isDelivered()){
+            if (message.isDelivered()) {
                 deliveryBus.post(message);
                 System.out.println("Message " + message.getMessage_number() + " was delivered to goal (" + v.getId() + ")");
-                if(message.getSource().getStatus()==1)
+                if (message.getSource().getStatus() == 1)
                     message.getSource().setStatus(0);
-                if(message.getTarget().getStatus()==2)
+                if (message.getTarget().getStatus() == 2)
                     message.getTarget().setStatus(0);
-            }
-        }
-        else{
+            }}
+        } else {
             sendPackage(v, pkg);
         }
     }
@@ -52,8 +53,12 @@ public class DatagramMode extends AbstractMode{
         }
     }
 
-    public void sendPackage(Vertex source, Package pkg){
+    public void sendPackage(Vertex source, Package pkg) {
         update_configuration();
+        if (!source.equals(pkg.getSource())) {
+            Channel toNotify = source.findPath(pkg.getSource());
+            toNotify.pushToQueue(new SysPackage(pkg.getSource(), source, pkg.getMsg(), SysPackage.Mode.NOTIFY));
+        }
         Vertex dest = nodes.get(source).getTable().getRouting().get(pkg.getGlobalTarget());
         pkg.setSource(source);
         pkg.setTarget(dest);

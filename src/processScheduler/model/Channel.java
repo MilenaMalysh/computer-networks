@@ -1,7 +1,9 @@
 package processScheduler.model;
 
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import processScheduler.io.Serializer;
 import processScheduler.logic.Package;
 
@@ -10,7 +12,7 @@ public abstract class Channel implements Comparable<Channel> {
     private int weight;
     private Vertex source;
     private Vertex target;
-    private BooleanProperty workload;
+    private IntegerProperty workload;
 
     public Channel(Vertex source, Vertex target, int weight){
         this.id = Serializer.pairingFunction(source.getId(), target.getId());
@@ -19,7 +21,7 @@ public abstract class Channel implements Comparable<Channel> {
         source.registerEdge(this);
         target.registerEdge(this);
         this.weight = weight;
-        workload = new SimpleBooleanProperty(false);
+        workload = new SimpleIntegerProperty(0);
 
     }
 
@@ -58,17 +60,19 @@ public abstract class Channel implements Comparable<Channel> {
 
     public abstract void addToQueue(Package p);
 
+    public abstract void pushToQueue(Package p);
+
     public abstract int getQueueSize();
 
     public abstract boolean update();
 
     public abstract int getTraffic(Vertex dest);
 
-    public boolean getWorkload() {
+    public int getWorkload() {
         return workload.get();
     }
 
-    public BooleanProperty workloadProperty() {
+    public IntegerProperty workloadProperty() {
         return workload;
     }
 

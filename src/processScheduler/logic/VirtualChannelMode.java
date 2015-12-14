@@ -15,24 +15,23 @@ public class VirtualChannelMode extends AbstractMode {
         Message message = generate_message();
         System.out.println("Generated message " + message.getMessage_number() + " , amount_package" + message.getPack_amount());
         System.out.println("Source " + message.getSource().getId() + " Target " + message.getTarget().getId());
-        if (message.getSource().getRouteTo() == null && message.getSource().getRouteFrom() == null) {
-            SysPackage pkg = new SysPackage(message.getTarget(), message.getSource(), 1, message, SysPackage.Mode.CONFIGURE);
-            message.getSource().setRouteTo(nodes.get(message.getSource()).getTable().getRouting().get(pkg.getGlobalTarget()));
-            sendPackage(message.getSource(), pkg);
-            message.getSource().getMessages().add(message);
-            message.getSource().setStatus(1);
-            message.getTarget().setStatus(2);
-            return message;
-        } else {
-            System.out.println(String.format("Vertex %d rejected sending message", message.getSource().getId()));
-            return null;
-        }
+        message.getSource().getMessages().addLast(message);
+        return message;
+    }
+
+    public void startTransmission(Message message) {
+        SysPackage pkg = new SysPackage(message.getTarget(), message.getSource(), message, SysPackage.Mode.CONFIGURE);
+        message.getSource().setRouteTo(nodes.get(message.getSource()).getTable().getRouting().get(pkg.getGlobalTarget()));
+        sendPackage(message.getSource(), pkg);
+        message.getSource().setStatus(1);
+        message.getTarget().setStatus(2);
+        message.setTransmitted(true);
     }
 
     public void sendPackage(Vertex source, Package pkg) {
         Message message = pkg.getMsg();
         Vertex nextnode;
-        if (pkg instanceof SysPackage && (((SysPackage) pkg).mode == SysPackage.Mode.DECONFIGURE || ((SysPackage) pkg).mode == SysPackage.Mode.ACCEPT))
+        if (pkg instanceof SysPackage && (((SysPackage) pkg).mode == SysPackage.Mode.NOTIFY_VIRTUAL || ((SysPackage) pkg).mode == SysPackage.Mode.ACCEPT))
             nextnode = source.getRouteFrom();
         else
             nextnode = source.getRouteTo();
@@ -67,7 +66,7 @@ public class VirtualChannelMode extends AbstractMode {
                     } else {
                         deliveryBus.post(processingPackage);
                         System.out.println(String.format("Virtual channel for message %d is configured", message.getMessage_number()));
-                        sendPackage(v, new SysPackage(message.getSource(), v, 1, message, SysPackage.Mode.ACCEPT));
+                        sendPackage(v, new SysPackage(message.getSource(), v, message, SysPackage.Mode.ACCEPT));
                     }
                     v.getQueue().remove(processingPackage);
                 } else {
@@ -95,23 +94,45 @@ public class VirtualChannelMode extends AbstractMode {
                     putPackages(v);
                 }
                 v.getQueue().remove(processingPackage);
-            }
-        } catch (ClassCastException e) {
-            if (processingPackage.getGlobalTarget().equals(v)) {
-                deliveryBus.post(processingPackage);
-                message.confirmDelivery(processingPackage);
-                System.out.println("Package " + processingPackage.getPackage_number() + " of message " + message.getMessage_number() + " received at goal (" + v.getId() + ")");
-                if (message.isDelivered()) {
+            } else if (sysPkg.mode == SysPackage.Mode.NOTIFY_VIRTUAL) {
+                if (!v.equals(sysPkg.getGlobalTarget())) {
+                    sendPackage(v, sysPkg);
+                } else {
+                    message.notifyDelivery(processingPackage);
+                    deliveryBus.post(processingPackage);
+                }
+                if (message.isNotified()) {
                     System.out.println("Message " + message.getMessage_number() + " was delivered to goal (" + v.getId() + ")");
-                    sendPackage(v, new SysPackage(message.getSource(), v, 1, message, SysPackage.Mode.DECONFIGURE));
+                    sendPackage(v, new SysPackage(message.getTarget(), v, message, SysPackage.Mode.DECONFIGURE));
                     v.setStatus(0);
                     v.setRouteFrom(null);
                     v.setRouteTo(null);
                 }
+                v.getQueue().remove(processingPackage);
+            }
+        } catch (ClassCastException e) {
+            if (processingPackage.getGlobalTarget().equals(v)) {
+                deliveryBus.post(processingPackage);
+                sendPackage(v, new SysPackage(message.getSource(), v, message, SysPackage.Mode.NOTIFY_VIRTUAL));
+                message.confirmDelivery(processingPackage);
+                System.out.println("Package " + processingPackage.getPackage_number() + " of message " + message.getMessage_number() + " received at goal (" + v.getId() + ")");
             } else {
                 sendPackage(v, processingPackage);
             }
             v.getQueue().remove(processingPackage);
         }
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        graph.getVertexeses().stream().forEach(v -> {
+            if (!v.getMessages().isEmpty()) {
+                Message pending = v.getMessages().getFirst();
+                if (pending.getSource().getRouteTo() == null && pending.getSource().getRouteFrom() == null&&!pending.isTransmitted()) {
+                    startTransmission(pending);
+                }
+            }
+        });
     }
 }

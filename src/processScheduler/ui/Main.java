@@ -227,6 +227,10 @@ public class Main extends Application {
         root.bindLabels(strategy.dataPackagesProperty(),
                 strategy.sysPackagesProperty(),
                 strategy.systemTimeProperty(),
-                strategy.averageTimeProperty());
+                strategy.averageTimeProperty(),
+                strategy.informationalDataProperty(),
+                strategy.systemDataProperty(),
+                strategy.getSentMessages(),
+                strategy.getDeliveredMessages());
     }
 }

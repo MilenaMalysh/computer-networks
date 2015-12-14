@@ -2,6 +2,7 @@ package processScheduler.ui.Blocks;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -16,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.control.TextArea;
 import javafx.util.converter.NumberStringConverter;
+import processScheduler.logic.Message;
 
 
 import java.awt.*;
@@ -26,6 +28,10 @@ import java.awt.*;
 public class TransNet extends BorderPane {
 
     private final Label label24;
+    private final Label label25;
+    private final Label label26;
+    private final Label label27;
+    private final Label label28;
     private VBox vboxmain;
     private Button btn1;
     private Button btn2;
@@ -60,8 +66,20 @@ public class TransNet extends BorderPane {
         Label label14 = new Label();
         label14.setText("Avg. msg. delivery");
         label14.setFont(new Font("Times New Roman", 16));
+        Label label15 = new Label();
+        label15.setText("Sent messages");
+        label15.setFont(new Font("Times New Roman", 16));
+        Label label16 = new Label();
+        label16.setText("Delivered messages");
+        label16.setFont(new Font("Times New Roman", 16));
+        Label label17 = new Label();
+        label17.setText("Informative data");
+        label17.setFont(new Font("Times New Roman", 16));
+        Label label18 = new Label();
+        label18.setText("System data");
+        label18.setFont(new Font("Times New Roman", 16));
 
-        vBox1.getChildren().addAll(label11,label12, label13, label14);
+        vBox1.getChildren().addAll(label11, label12, label13, label14, label15, label16, label17, label18);
         vBox1.setMargin(label11, new Insets(4));
         vBox1.setMargin(label12, new Insets(4));
         vBox1.setMargin(label13, new Insets(4));
@@ -75,14 +93,22 @@ public class TransNet extends BorderPane {
         label23.setFont(new Font("Times New Roman", 16));
         label24 = new Label();
         label24.setFont(new Font("Times New Roman", 16));
+        label25 = new Label();
+        label25.setFont(new Font("Times New Roman", 16));
+        label26 = new Label();
+        label26.setFont(new Font("Times New Roman", 16));
+        label27 = new Label();
+        label27.setFont(new Font("Times New Roman", 16));
+        label28 = new Label();
+        label28.setFont(new Font("Times New Roman", 16));
 
-        vBox2.getChildren().addAll(label21, label22, label23, label24);
+        vBox2.getChildren().addAll(label21, label22, label23, label24, label25, label26, label27, label28);
         vBox2.setMargin(label21, new Insets(4));
         vBox2.setMargin(label22, new Insets(4));
         vBox2.setMargin(label23, new Insets(4));
         vBox2.setMargin(label24, new Insets(4));
 
-        hBox1.getChildren().addAll(vBox1,vBox2);
+        hBox1.getChildren().addAll(vBox1, vBox2);
 
         bordpane2.setCenter(hBox1);
         //---------------Text field details-------//
@@ -94,19 +120,20 @@ public class TransNet extends BorderPane {
 
         //---------------Resume-------------------//
 
-        vboxmain.getChildren().addAll(bordpane2,bordpane3);
+        vboxmain.getChildren().addAll(bordpane2, bordpane3);
 
 
         this.setTop(label);
         this.setCenter(vboxmain);
-        this.setMargin(label, new Insets(0,5,5,5));
+        this.setMargin(label, new Insets(0, 5, 5, 5));
 
         set_visual_part();
     }
-    public void set_visual_part(){
-        this.setMinSize(300,400);
-        this.setMaxSize(300,400);
-        this.setPrefSize(300,400);
+
+    public void set_visual_part() {
+        this.setMinSize(300, 400);
+        this.setMaxSize(300, 400);
+        this.setPrefSize(300, 400);
 
         //textarea.setPrefColumnCount(20);
         //textarea.maxHeight(250);
@@ -121,14 +148,39 @@ public class TransNet extends BorderPane {
         vboxmain.setPrefWidth(250);
     }
 
-    public void bindLabels(IntegerProperty dataPkgs, IntegerProperty sysPkgs, IntegerProperty systemTime, IntegerProperty averageTime){
+    public void bindLabels(IntegerProperty dataPkgs,
+                           IntegerProperty sysPkgs,
+                           IntegerProperty systemTime,
+                           IntegerProperty averageTime,
+                           IntegerProperty informationalData,
+                           IntegerProperty systemData,
+                           ObservableList<Message> sentMessages,
+                           ObservableList<Message> receivedMessages) {
         label21.textProperty().unbind();
         label22.textProperty().unbind();
         label23.textProperty().unbind();
         label24.textProperty().unbind();
+        label25.textProperty().unbind();
+        label26.textProperty().unbind();
+        label27.textProperty().unbind();
+        label28.textProperty().unbind();
         label21.textProperty().bind(dataPkgs.asString());
         label22.textProperty().bind(sysPkgs.asString());
         label23.textProperty().bind(systemTime.asString());
         label24.textProperty().bind(averageTime.asString());
+        label27.textProperty().bind(informationalData.asString());
+        label28.textProperty().bind(systemData.asString());
+        sentMessages.addListener(new ListChangeListener<Message>() {
+            @Override
+            public void onChanged(Change<? extends Message> c) {
+                label25.setText(String.valueOf(sentMessages.size()));
+            }
+        });
+        receivedMessages.addListener(new ListChangeListener<Message>() {
+            @Override
+            public void onChanged(Change<? extends Message> c) {
+                label26.setText(String.valueOf(receivedMessages.size()));
+            }
+        });
     }
 }

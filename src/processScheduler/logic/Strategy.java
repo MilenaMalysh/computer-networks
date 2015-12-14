@@ -15,6 +15,8 @@ import processScheduler.model.Graph;
 import processScheduler.ui.Blocks.FromOneToAnother;
 import processScheduler.ui.Blocks.TestNet;
 
+import java.util.OptionalDouble;
+
 /**
  * Created by Milena on 02.12.2015.
  */
@@ -25,14 +27,16 @@ public class Strategy {
     private AbstractMode mode;
     private AbstractBuilder builder;
     private Timeline timeline;
-    private final int TICK_DURATION = 100;
-    private final int TICKSFORMESSAGE =100;
+    private static final int TICK_DURATION = 100;
+    public static int TICKSFORMESSAGE =100;
     private int counter;
     private PlaybackMode playbackMode;
     private ObservableList<Message> sentMessages;
     private ObservableList<Message> deliveredMessages;
     private IntegerProperty dataPackages;
     private IntegerProperty sysPackages;
+    private IntegerProperty informationalData;
+    private IntegerProperty systemData;
     protected IntegerProperty averageTime;
     protected IntegerProperty systemTime;
 
@@ -48,6 +52,8 @@ public class Strategy {
         deliveredMessages = FXCollections.<Message>observableArrayList();
         dataPackages = new SimpleIntegerProperty(0);
         sysPackages = new SimpleIntegerProperty(0);
+        informationalData = new SimpleIntegerProperty(0);
+        systemData = new SimpleIntegerProperty(0);
         systemTime = new SimpleIntegerProperty(0);
         averageTime = new SimpleIntegerProperty(0);
         IntegerBinding binding = new IntegerBinding() {
@@ -57,7 +63,8 @@ public class Strategy {
 
             @Override
             protected int computeValue() {
-                return deliveredMessages.isEmpty()?0:deliveredMessages.stream().mapToInt(Message::getDeliveryTime).sum();
+                OptionalDouble average = deliveredMessages.stream().mapToInt(Message::getDeliveryTime).average();
+                return average.isPresent()? (int) average.getAsDouble() :0;
             }
 
             @Override
@@ -123,6 +130,8 @@ public class Strategy {
         sentMessages.clear();
         deliveredMessages.clear();
         systemTime.setValue(0);
+        systemData.setValue(0);
+        informationalData.setValue(0);
         timeline.stop();
     }
 
@@ -148,7 +157,6 @@ public class Strategy {
 
     @Subscribe
     public void onMessageDelivered(Message msg) {
-        sentMessages.remove(msg);
         msg.setDeliveryTime(systemTime.get() - msg.getStart());
         deliveredMessages.add(msg);
     }
@@ -157,9 +165,35 @@ public class Strategy {
     public void onPackageDelivered(Package pkg){
         if(pkg instanceof SysPackage){
             sysPackages.setValue(sysPackages.get()+1);
+            systemData.setValue(systemData.get()+pkg.getSize());
         }else{
             dataPackages.setValue(dataPackages.get()+1);
+            informationalData.setValue(informationalData.get()+pkg.getSize());
         }
+    }
+
+    public int getInformationalData() {
+        return informationalData.get();
+    }
+
+    public IntegerProperty informationalDataProperty() {
+        return informationalData;
+    }
+
+    public void setInformationalData(int informationalData) {
+        this.informationalData.set(informationalData);
+    }
+
+    public int getSystemData() {
+        return systemData.get();
+    }
+
+    public IntegerProperty systemDataProperty() {
+        return systemData;
+    }
+
+    public void setSystemData(int systemData) {
+        this.systemData.set(systemData);
     }
 
     public enum PlaybackMode {
@@ -186,4 +220,11 @@ public class Strategy {
         return averageTime;
     }
 
+    public ObservableList<Message> getSentMessages() {
+        return sentMessages;
+    }
+
+    public ObservableList<Message> getDeliveredMessages() {
+        return deliveredMessages;
+    }
 }
