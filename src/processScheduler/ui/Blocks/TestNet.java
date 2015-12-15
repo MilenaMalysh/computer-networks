@@ -81,7 +81,7 @@ public class TestNet extends BorderPane {
 
 
         HBox btns = new HBox(10);
-        Label intensityLabel = new Label("Intensity:");
+        Label intensityLabel = new Label("1/Intensity:");
         intensityLabel.setFont(new Font("Times New Roman", 16));
         btns.getChildren().addAll(playButton,stopButton, intensityLabel, intensity);
 

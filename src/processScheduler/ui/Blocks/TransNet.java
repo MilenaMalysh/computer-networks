@@ -84,6 +84,10 @@ public class TransNet extends BorderPane {
         vBox1.setMargin(label12, new Insets(4));
         vBox1.setMargin(label13, new Insets(4));
         vBox1.setMargin(label14, new Insets(4));
+        vBox1.setMargin(label15, new Insets(4));
+        vBox1.setMargin(label16, new Insets(4));
+        vBox1.setMargin(label17, new Insets(4));
+        vBox1.setMargin(label18, new Insets(4));
 
         label21 = new Label();
         label21.setFont(new Font("Times New Roman", 16));
@@ -107,6 +111,10 @@ public class TransNet extends BorderPane {
         vBox2.setMargin(label22, new Insets(4));
         vBox2.setMargin(label23, new Insets(4));
         vBox2.setMargin(label24, new Insets(4));
+        vBox2.setMargin(label25, new Insets(4));
+        vBox2.setMargin(label26, new Insets(4));
+        vBox2.setMargin(label27, new Insets(4));
+        vBox2.setMargin(label28, new Insets(4));
 
         hBox1.getChildren().addAll(vBox1, vBox2);
 
@@ -131,9 +139,9 @@ public class TransNet extends BorderPane {
     }
 
     public void set_visual_part() {
-        this.setMinSize(300, 400);
-        this.setMaxSize(300, 400);
-        this.setPrefSize(300, 400);
+        this.setMinSize(300, 450);
+        this.setMaxSize(300, 450);
+        this.setPrefSize(300, 450);
 
         //textarea.setPrefColumnCount(20);
         //textarea.maxHeight(250);

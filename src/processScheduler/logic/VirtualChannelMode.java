@@ -129,7 +129,8 @@ public class VirtualChannelMode extends AbstractMode {
         graph.getVertexeses().stream().forEach(v -> {
             if (!v.getMessages().isEmpty()) {
                 Message pending = v.getMessages().getFirst();
-                if (pending.getSource().getRouteTo() == null && pending.getSource().getRouteFrom() == null&&!pending.isTransmitted()) {
+                if (!pending.isTransmitted()&&pending.getSource().getRouteTo() == null && pending.getSource().getRouteFrom() == null
+                        &&pending.getTarget().getRouteTo() == null && pending.getTarget().getRouteFrom() == null) {
                     startTransmission(pending);
                 }
             }

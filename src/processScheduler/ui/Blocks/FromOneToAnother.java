@@ -179,9 +179,9 @@ public class FromOneToAnother extends BorderPane {
         field2.setMaxWidth(120);
         field2.setPrefWidth(120);
 
-        this.setMinSize(300,400);
-        this.setMaxSize(300,400);
-        this.setPrefSize(300,400);
+        this.setMinSize(300,350);
+        this.setMaxSize(300,350);
+        this.setPrefSize(300,350);
     }
 
 
