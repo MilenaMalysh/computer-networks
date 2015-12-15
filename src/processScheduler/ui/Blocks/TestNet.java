@@ -51,7 +51,6 @@ public class TestNet extends BorderPane {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 if(newValue.matches("\\d*")){
-                    Message.PACK_SIZE = Integer.parseInt(newValue);
                 }
                 else {
                     intensity.setText(oldValue);

@@ -68,8 +68,6 @@ public abstract class AbstractMode {
 
     public void cancel() {
         graph.getVertexeses().forEach(v -> {
-            v.setRouteFrom(null);
-            v.setRouteTo(null);
             v.getMessages().clear();
             v.getQueue().clear();
             v.setStatus(0);

@@ -14,12 +14,11 @@ import java.util.TreeMap;
 public class Vertex implements Comparable<Vertex> {
     private int id;
     transient private TreeMap<Vertex, Channel> neighbours;
-    transient private Vertex routeTo;
-    transient private Vertex routeFrom;
     private RouterModel router;
     private Deque<Package> queue;
     private Deque<Message> messages;
     private IntegerProperty status;
+    private int configurationCount;
     public TreeMap<Vertex, Channel> getNeighbours() {
         return neighbours;
     }
@@ -30,6 +29,7 @@ public class Vertex implements Comparable<Vertex> {
         this.queue = new ArrayDeque<>();
         this.messages = new ArrayDeque<>();
         status = new SimpleIntegerProperty(0);
+        configurationCount = 0;
     }
 
     public void registerEdge(Channel e){
@@ -71,21 +71,6 @@ public class Vertex implements Comparable<Vertex> {
         return String.format("Vertex: id=%d", id);
     }
 
-    public Vertex getRouteTo() {
-        return routeTo;
-    }
-
-    public void setRouteTo(Vertex routeTo) {
-        this.routeTo = routeTo;
-    }
-
-    public Vertex getRouteFrom() {
-        return routeFrom;
-    }
-
-    public void setRouteFrom(Vertex routeFrom) {
-        this.routeFrom = routeFrom;
-    }
 
     public Deque<Message> getMessages() {
         return messages;
@@ -105,5 +90,17 @@ public class Vertex implements Comparable<Vertex> {
 
     public IntegerProperty statusProperty() {
         return status;
+    }
+
+    public void configure(){
+        configurationCount++;
+    }
+
+    public void deconfigure(){
+        configurationCount--;
+    }
+
+    public boolean isConfigured(){
+        return configurationCount>0;
     }
 }

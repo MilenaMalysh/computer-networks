@@ -27,8 +27,8 @@ public class Strategy {
     private AbstractMode mode;
     private AbstractBuilder builder;
     private Timeline timeline;
-    private static final int TICK_DURATION = 100;
-    public static int TICKSFORMESSAGE =100;
+    private static final int TICK_DURATION = 20;
+    public static int TICKSFORMESSAGE =1000;
     private int counter;
     private PlaybackMode playbackMode;
     private ObservableList<Message> sentMessages;
