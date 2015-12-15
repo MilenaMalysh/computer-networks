@@ -27,6 +27,11 @@ public class DatagramMode extends AbstractMode {
     @Override
     public void processDeliveredPackage(Vertex v) {
         Package pkg = v.getQueue().pollFirst();
+        if(!(pkg instanceof SysPackage && ((SysPackage) pkg).mode == SysPackage.Mode.NOTIFY)) {
+            Channel toNotify = v.findPath(pkg.getSource());
+            toNotify.pushToQueue(new SysPackage(pkg.getSource(), v, pkg.getMsg(), SysPackage.Mode.NOTIFY));
+
+        }
         if (pkg.getGlobalTarget().equals(v)) {
             Message message = pkg.getMsg();
             deliveryBus.post(pkg);
@@ -55,10 +60,6 @@ public class DatagramMode extends AbstractMode {
 
     public void sendPackage(Vertex source, Package pkg) {
         update_configuration();
-        if (!source.equals(pkg.getSource())) {
-            Channel toNotify = source.findPath(pkg.getSource());
-            toNotify.pushToQueue(new SysPackage(pkg.getSource(), source, pkg.getMsg(), SysPackage.Mode.NOTIFY));
-        }
         Vertex dest = nodes.get(source).getTable().getRouting().get(pkg.getGlobalTarget());
         pkg.setSource(source);
         pkg.setTarget(dest);

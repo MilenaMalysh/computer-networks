@@ -42,9 +42,9 @@ public class DuplexChannel extends Channel {
             catch (ClassCastException e){
                 workloadProperty().setValue(1);
             }
-        }else if(!targetSourceQueue.isEmpty()){
+        }else if(!sourceTargetQueue.isEmpty()){
             try{
-                SysPackage p = (SysPackage)targetSourceQueue.getFirst();
+                SysPackage p = (SysPackage)sourceTargetQueue.getFirst();
                 workloadProperty().setValue(p.mode.modeColorSelector);
             }
             catch (ClassCastException e){

@@ -35,8 +35,8 @@ public class GraphAdapter {
     private ZoomableScrollPane scrollPane;
     MouseGestures mouseGestures;
     VertexLayer vertexLayer;
-    BiMap<Vertex, VertexView> allVertexes;
-    BiMap<Channel, EdgeView> allEdges;
+    HashBiMap<Vertex, VertexView> allVertexes;
+    HashBiMap<Channel, EdgeView> allEdges;
     private final MenuItem[] items = {new MenuItem("Add")};
     private final ContextMenu contextMenu = new ContextMenu(items);
     {

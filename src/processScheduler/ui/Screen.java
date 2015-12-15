@@ -17,6 +17,7 @@ import processScheduler.ui.Blocks.FromOneToAnother;
 import processScheduler.ui.Blocks.TestNet;
 import processScheduler.ui.Blocks.TransNet;
 import processScheduler.ui.graph.GraphAdapter;
+import processScheduler.ui.graph.layout.NetworkLayout;
 import processScheduler.ui.graph.layout.RandomLayout;
 
 /**
@@ -35,23 +36,8 @@ public class Screen {
     public Screen(Stage stage, GraphAdapter graphAdapter) {
         stage.show();
 
-        //--------------Create Menu--------------------//
-        //menu1 = new Menu("File");
-        //menu2 = new Menu("Parameters");
-        // menu3 = new Menu("Help");
         this.graphAdapter = graphAdapter;
-        //MenuItem newMenuItem = new MenuItem("New");
-        //MenuItem loadMenuItem = new MenuItem("Load");
-        //MenuItem saveMenuItem = new MenuItem("Save");
-        //MenuItem exitMenuItem = new MenuItem("Exit");
-        //exitMenuItem.setOnAction(actionEvent -> Platform.exit());
 
-        //menu1.getItems().addAll(newMenuItem, loadMenuItem, saveMenuItem,
-        //        new SeparatorMenuItem(), exitMenuItem);
-
-
-        //MenuBar menuBar = new MenuBar();
-        //menuBar.getMenus().addAll(menu1, menu2, menu3);
         //--------------Create Main Screen--------------//
         HBox hBox = new HBox(2);
 
@@ -78,8 +64,8 @@ public class Screen {
         //menuBar.prefWidthProperty().bind(stage.widthProperty());
         stage.setScene(scene);
 
-        RandomLayout randomLayout = new RandomLayout(graphAdapter);
-        randomLayout.execute();
+        NetworkLayout networkLayout = new NetworkLayout(graphAdapter);
+        networkLayout.execute();
     }
 
     private void set_visual_part() {
