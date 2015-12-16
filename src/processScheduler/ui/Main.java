@@ -63,7 +63,7 @@ public class Main extends Application {
         graph.addEdge(graph.generateEdge(1 + r.nextInt(10), 11 + r.nextInt(10), 3 * weights[r.nextInt(weights.length)], r.nextBoolean() ? DuplexChannel.class : HalfDuplexChannel.class));
         graph.addEdge(graph.generateEdge(1 + r.nextInt(10), 21 + r.nextInt(10), 3*weights[r.nextInt(weights.length)], r.nextBoolean() ? DuplexChannel.class : HalfDuplexChannel.class));
         graph.addEdge(graph.generateEdge(11 + r.nextInt(10), 21 + r.nextInt(10), 3*weights[r.nextInt(weights.length)], r.nextBoolean() ? DuplexChannel.class : HalfDuplexChannel.class));
-        while ((float) 2*graph.getEdges().size() / graph.getVertexeses().size() < 3.0) {
+        while ((float) 2*graph.getEdges().size() / graph.getVertexeses().size() < 4.0) {
             Vertex vertex1;
             Vertex vertex2;
             Channel e;
