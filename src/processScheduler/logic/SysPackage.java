@@ -12,6 +12,11 @@ public class SysPackage extends Package {
         this.mode = mode;
     }
 
+    @Override
+    public String toString() {
+        return String.format("%sPackage of msg#%d", mode, getMsg().getMessage_number());
+    }
+
     public enum Mode {
         CONFIGURE(4,2), DECONFIGURE(4,3), ACCEPT(4,4), NOTIFY(2,5), NOTIFY_VIRTUAL(4,6);
 

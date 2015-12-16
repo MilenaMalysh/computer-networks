@@ -33,13 +33,12 @@ public class Package {
         this.timer = counter;
     }
 
-    public void update(int chanel_weigth){
+    public void update(){
         this.timer--;
-        System.out.println("Package with number "+package_number+" of message "+msg.getMessage_number()+" wait in channel "+chanel_weigth+". Needed time"+timer);
     }
 
     public boolean isDelivered(){
-        return timer==0;
+        return timer<=0;
     }
 
     public Vertex getSource() {
@@ -92,5 +91,10 @@ public class Package {
 
     public void setMsg(Message msg) {
         this.msg = msg;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Package#%d(size=%d) of msg#%d", package_number,size,msg.getMessage_number());
     }
 }

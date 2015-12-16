@@ -74,14 +74,14 @@ public class DuplexChannel extends Channel {
         boolean result = false;
         if (!sourceTargetQueue.isEmpty()) {
             Package sourceTargetHead = sourceTargetQueue.getFirst();
-            sourceTargetHead.update(this.getWeight());
+            sourceTargetHead.update();
             if (sourceTargetHead.isDelivered()) {
                 result = true;
             }
         }
         if (!targetSourceQueue.isEmpty()) {
             Package targetSourceHead = targetSourceQueue.getFirst();
-            targetSourceHead.update(this.getWeight());
+            targetSourceHead.update();
             if (targetSourceHead.isDelivered()) {
                 result = true;
             }

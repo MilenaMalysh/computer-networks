@@ -87,8 +87,6 @@ public abstract class AbstractMode {
     public void deliverResult(Package p) {
         if (p != null) {
             p.getTarget().getQueue().add(p);
-            Message message = p.getMsg();
-            System.out.println("Package " + p.getPackage_number() + " of message " + message.getMessage_number() + " has just received to the vertex ( " + p.getTarget().getId() + " )");
         }
     }
 

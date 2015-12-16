@@ -27,7 +27,7 @@ public class Strategy {
     private AbstractMode mode;
     private AbstractBuilder builder;
     private Timeline timeline;
-    private static final int TICK_DURATION = 20;
+    private static final int TICK_DURATION = 10;
     public static int TICKSFORMESSAGE =1000;
     private int counter;
     private PlaybackMode playbackMode;
@@ -152,13 +152,15 @@ public class Strategy {
         }
         mode.tick();
         systemTime.setValue(systemTime.get() + 1);
-        System.out.println("+++");
     }
 
     @Subscribe
-    public void onMessageDelivered(Message msg) {
-        msg.setDeliveryTime(systemTime.get() - msg.getStart());
-        deliveredMessages.add(msg);
+    public void onMessageEvent(Message msg) {
+        if (msg.isTransmitted()) {
+            msg.setDeliveryTime(systemTime.get() - msg.getStart());
+            deliveredMessages.add(msg);
+            System.out.println(String.format("%s delivered at %d", msg, systemTime.get()));
+        }else System.out.println(String.format("%s sent from %s to %s at %d", msg, msg.getSource(), msg.getTarget(),systemTime.get()));
     }
 
     @Subscribe
@@ -166,9 +168,12 @@ public class Strategy {
         if(pkg instanceof SysPackage){
             sysPackages.setValue(sysPackages.get()+1);
             systemData.setValue(systemData.get()+pkg.getSize());
+            if(((SysPackage) pkg).mode!= SysPackage.Mode.NOTIFY)
+            System.out.println(String.format("%s delivered at %d", pkg, systemTime.get()));
         }else{
             dataPackages.setValue(dataPackages.get()+1);
             informationalData.setValue(informationalData.get()+pkg.getSize());
+            System.out.println(String.format("%s delivered at %d", pkg, systemTime.get()));
         }
     }
 

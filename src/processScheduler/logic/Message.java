@@ -104,4 +104,9 @@ public class Message {
     public void setTransmitted(boolean transmitted) {
         this.transmitted = transmitted;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Message#%d(size=%d)", message_number, pack_amount*PACK_SIZE);
+    }
 }

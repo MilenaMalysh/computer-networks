@@ -56,7 +56,7 @@ public class HalfDuplexChannel extends Channel {
     public boolean update() {
         if(!packageQueue.isEmpty()){
             Package head = packageQueue.getFirst();
-            head.update(this.getWeight());
+            head.update();
             if(head.isDelivered()){
                 return true;
             }

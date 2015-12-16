@@ -15,9 +15,9 @@ public class DatagramMode extends AbstractMode {
     @Override
     public Message sendMessage() {
         Message message = generate_message();
-        System.out.println("Generated message " + message.getMessage_number() + " , amount_package" + message.getPack_amount());
-        System.out.println("Source " + message.getSource().getId() + " Target " + message.getTarget().getId());
         message.getSource().getMessages().add(message);
+        deliveryBus.post(message);
+        message.setTransmitted(true);
         putPackages(message.getSource());
         message.getSource().setStatus(1);
         message.getTarget().setStatus(2);

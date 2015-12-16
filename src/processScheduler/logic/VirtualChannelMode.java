@@ -13,9 +13,8 @@ public class VirtualChannelMode extends AbstractMode {
     @Override
     public Message sendMessage() {
         Message message = generate_message();
-        System.out.println("Generated message " + message.getMessage_number() + " , amount_package" + message.getPack_amount());
-        System.out.println("Source " + message.getSource().getId() + " Target " + message.getTarget().getId());
         message.getSource().getMessages().addLast(message);
+        deliveryBus.post(message);
         return message;
     }
 
@@ -32,15 +31,12 @@ public class VirtualChannelMode extends AbstractMode {
     }
 
     public void sendPackage(Vertex source, Package pkg) {
-        Message message = pkg.getMsg();
         Vertex nextnode;
         nextnode = findNext(source, pkg.getGlobalTarget());
         pkg.setTarget(nextnode);
         pkg.setSource(source);
         Channel neededChannel = graph.findChannel(source, nextnode);
         neededChannel.addToQueue(pkg);
-        System.out.println("In the vertex " + source.getId() + " start to process package " + pkg.getPackage_number() + " of message " + message.getMessage_number() + " and has just send to the vertex " + nextnode.getId());
-
     }
 
     public void putPackages(Vertex source) {
@@ -67,7 +63,6 @@ public class VirtualChannelMode extends AbstractMode {
                     v.setStatus(3);
                 } else {
                     deliveryBus.post(processingPackage);
-                    System.out.println(String.format("Virtual channel for message %d is configured", message.getMessage_number()));
                     sendPackage(v, new SysPackage(message.getSource(), v, message, SysPackage.Mode.ACCEPT));
                 }
             } else if (sysPkg.mode == SysPackage.Mode.DECONFIGURE) {
@@ -95,7 +90,6 @@ public class VirtualChannelMode extends AbstractMode {
                     deliveryBus.post(processingPackage);
                 }
                 if (message.isNotified()) {
-                    System.out.println("Message " + message.getMessage_number() + " was delivered to goal (" + v.getId() + ")");
                     sendPackage(v, new SysPackage(message.getTarget(), v, message, SysPackage.Mode.DECONFIGURE));
                     if (v.isConfigured())
                         v.setStatus(3);
@@ -109,7 +103,6 @@ public class VirtualChannelMode extends AbstractMode {
                 deliveryBus.post(processingPackage);
                 sendPackage(v, new SysPackage(message.getSource(), v, message, SysPackage.Mode.NOTIFY_VIRTUAL));
                 message.confirmDelivery(processingPackage);
-                System.out.println("Package " + processingPackage.getPackage_number() + " of message " + message.getMessage_number() + " received at goal (" + v.getId() + ")");
             } else {
                 sendPackage(v, processingPackage);
             }
