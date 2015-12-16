@@ -9,6 +9,7 @@ import java.util.*;
  */
 public class Message {
     public static int PACK_SIZE = 4;
+    private static int PACK_HEADER_SIZE = 1;
     private int pack_amount;
     private LinkedHashMap<Package, Boolean> packages = new LinkedHashMap<>();
     private Vertex target;
@@ -25,8 +26,8 @@ public class Message {
         this.confirmations = 0;
         this.transmitted = false;
         this.message_number = message_number;
-        this.pack_amount =  message_size/ PACK_SIZE;
-        if(pack_amount*PACK_SIZE<message_size)
+        this.pack_amount =  message_size/ (PACK_SIZE-PACK_HEADER_SIZE);
+        if(pack_amount*(PACK_SIZE-PACK_HEADER_SIZE)<message_size)
             pack_amount++;
         for (int i = 1; i <= this.pack_amount; i++) {
             packages.put(new Package(this.target, this.source, i, PACK_SIZE, this), false);
