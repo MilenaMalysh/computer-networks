@@ -71,6 +71,7 @@ public abstract class AbstractMode {
             v.getMessages().clear();
             v.getQueue().clear();
             v.setStatus(0);
+            v.setConfigurationCount(0);
         });
         graph.getEdges().forEach(Channel::cancel);
     }

@@ -4,7 +4,6 @@ import processScheduler.model.Channel;
 import processScheduler.model.Graph;
 import processScheduler.model.Vertex;
 
-import java.util.Collection;
 import java.util.Set;
 
 public class DatagramMode extends AbstractMode {

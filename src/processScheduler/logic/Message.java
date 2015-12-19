@@ -8,8 +8,8 @@ import java.util.*;
  * Created by Milena on 02.12.2015.
  */
 public class Message {
-    public static int PACK_SIZE = 4;
-    private static int PACK_HEADER_SIZE = 1;
+    public static int PACK_SIZE = 8;
+    public static int PACK_HEADER_SIZE = 1;
     private int pack_amount;
     private LinkedHashMap<Package, Boolean> packages = new LinkedHashMap<>();
     private Vertex target;

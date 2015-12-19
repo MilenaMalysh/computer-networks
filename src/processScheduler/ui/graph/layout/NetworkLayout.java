@@ -24,7 +24,7 @@ public class NetworkLayout extends Layout {
     }
 
     public void execute() {
-        double radius = 100;
+        double radius = 150;
         double step = 2*Math.PI/10;
         double centerX;
         double centerY;
@@ -33,11 +33,11 @@ public class NetworkLayout extends Layout {
         for (Map.Entry<Vertex, VertexView> vertex : graph.getAllVertexes()) {
             int i = vertex.getKey().getId();
             if(1<=i&&i<=10){
-                centerX = 200;
-                centerY = 200;
+                centerX = 170;
+                centerY = 160;
             }else if(10<i&&i<=20){
-                centerX = 600;
-                centerY = 200;
+                centerX = 640;
+                centerY = 160;
             }else{
                 centerX = 400;
                 centerY = 400;

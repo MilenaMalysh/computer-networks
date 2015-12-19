@@ -27,7 +27,7 @@ public class Strategy {
     private AbstractMode mode;
     private AbstractBuilder builder;
     private Timeline timeline;
-    private static final int TICK_DURATION = 10;
+    private static final int TICK_DURATION = 5;
     public static int TICKSFORMESSAGE =1000;
     private int counter;
     private PlaybackMode playbackMode;
@@ -44,7 +44,10 @@ public class Strategy {
         eventBus.register(this);
         this.graph = graph;
         timeline = new Timeline(new KeyFrame(Duration.millis(TICK_DURATION), event -> {
-            step();
+            if (systemTime.get() != 10000) {
+                step();
+            } else
+                timeline.stop();
         }));
         timeline.setCycleCount(Animation.INDEFINITE);
         this.counter = 1;
@@ -172,8 +175,10 @@ public class Strategy {
             System.out.println(String.format("%s delivered at %d", pkg, systemTime.get()));
         }else{
             dataPackages.setValue(dataPackages.get()+1);
-            informationalData.setValue(informationalData.get()+pkg.getSize());
+            informationalData.setValue(informationalData.get()+pkg.getSize()-Message.PACK_HEADER_SIZE);
+            systemData.setValue(systemData.get()+Message.PACK_HEADER_SIZE);
             System.out.println(String.format("%s delivered at %d", pkg, systemTime.get()));
+
         }
     }
 

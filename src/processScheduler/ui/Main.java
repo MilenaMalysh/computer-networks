@@ -59,10 +59,22 @@ public class Main extends Application {
                 j = 20 + j % 30;
             graph.addEdge(graph.generateEdge(i, j, weights[r.nextInt(weights.length - 1)], r.nextBoolean() ? DuplexChannel.class : HalfDuplexChannel.class));
         }
-
         graph.addEdge(graph.generateEdge(1 + r.nextInt(10), 11 + r.nextInt(10), 3 * weights[r.nextInt(weights.length)], r.nextBoolean() ? DuplexChannel.class : HalfDuplexChannel.class));
         graph.addEdge(graph.generateEdge(1 + r.nextInt(10), 21 + r.nextInt(10), 3*weights[r.nextInt(weights.length)], r.nextBoolean() ? DuplexChannel.class : HalfDuplexChannel.class));
         graph.addEdge(graph.generateEdge(11 + r.nextInt(10), 21 + r.nextInt(10), 3*weights[r.nextInt(weights.length)], r.nextBoolean() ? DuplexChannel.class : HalfDuplexChannel.class));
+        for (int i = 0; i < 21; i+=10) {
+            for (int j = 0; j < 1 + r.nextInt(2); j++) {
+                Vertex vertex1;
+                Vertex vertex2;
+                Channel e;
+                do {
+                    vertex1 = graph.findVertex(1+i + r.nextInt(10));
+                    vertex2 = graph.findVertex(1+(i + r.nextInt(10)+10)%30);
+                    e = graph.findChannel(vertex1, vertex2);
+                } while (vertex1.equals(vertex2) || e != null);
+                graph.addEdge(graph.generateEdge(vertex1.getId(), vertex2.getId(), 3*weights[r.nextInt(weights.length - 1)], r.nextBoolean() ? DuplexChannel.class : HalfDuplexChannel.class));
+            }
+        }
         while ((float) 2*graph.getEdges().size() / graph.getVertexeses().size() < 4.0) {
             Vertex vertex1;
             Vertex vertex2;

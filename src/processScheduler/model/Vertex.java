@@ -103,4 +103,8 @@ public class Vertex implements Comparable<Vertex> {
     public boolean isConfigured(){
         return configurationCount>0;
     }
+
+    public void setConfigurationCount(int configurationCount) {
+        this.configurationCount = configurationCount;
+    }
 }
